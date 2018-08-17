@@ -1,0 +1,13 @@
+Start: Eb
+Productions:
+Eb = Tb Ebr
+Ebr = 'or' Tb Ebr | e
+Tb = Fb Tbr
+Tbr = 'and' Fb Tbr | e
+Fb = 'not' Fb | 'true' | 'false' | '(' Eb ')' | 'id'
+END
+tokenMap:
+END
+Codes:
+true or (false and not false) or not (true or false)
+END

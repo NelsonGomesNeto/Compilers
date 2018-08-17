@@ -13,6 +13,7 @@ tokenMap:
 END
 Codes:
 ((1+2)/3-3)
+(1+1)
 END
 Ea = Ta Ear
 Ear = '+' Ta Ear | e
