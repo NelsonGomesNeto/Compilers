@@ -1,15 +1,16 @@
-Ea
-ER:
+Start: Ea
+Productions:
 Ea = Ta Ear
 Ear = '+' Ta Ear | e
 Ta = Fa Tar
 Tar = '*' Fa Tar | e
 Fa = 'const' | '(' Ea ')'
 END
-INPUT:
-const + const * const
-const + const + const
-( ( const + const ) + const )
-const + const
-(const)+(const*const)
+Codes:
+1 + 2 * 3
 END
+Ea = Ta Ear
+Ear = '+' Ta Ear | e
+Ta = Fa Tar
+Tar = '*' Fa Tar | e
+Fa = 'const' | '(' Ea ')'

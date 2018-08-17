@@ -1,5 +1,13 @@
 VERBOSE = 0
-separator = "()+-*"
+separator = "()+-"
+tokenMap = {}
+for i in range(10):
+    tokenMap[str(i)] = 'const'
+
+def classify(token):
+    if (token in tokenMap):
+        return(tokenMap[token])
+    return(token)
 
 def printER(er, nonTerminal = None):
     for rule in (nonTerminal if nonTerminal is not None else er):
@@ -101,7 +109,7 @@ def parseCode(S, er, code, codePointer, tree, depth):
                 found = parseCode(element, er, code, codePointer, tree, depth + 1)
                 if (found == -1): break
                 else: codePointer = found
-            elif (codePointer < len(code) and element == code[codePointer]):
+            elif (codePointer < len(code) and element == classify(code[codePointer])):
                 codePointer += 1
             else:
                 break
@@ -114,10 +122,11 @@ def parseCode(S, er, code, codePointer, tree, depth):
             return(prev)
     return(-1)
 
-S = input()
+S = input().split()[1]
 er, nonTerminal = readER()
 printER(er, nonTerminal)
 
+print()
 codes = readCodes()
 for code in codes:
     print()
