@@ -7,16 +7,19 @@ Tar = 'mult' Fa Tar | e
 Fa = 'const' | '(' Ea ')'
 END
 tokenMap:
-0123456789 = const
-+- = add
-*/ = mult
+0123456789 #= const
++- #= add
+*/ #= mult
 END
 Codes:
 ((1+2)/3-3)
 (1+1)
 END
+## The problem of having exp is that '*' is a separator
 Ea = Ta Ear
-Ear = '+' Ta Ear | e
-Ta = Fa Tar
-Tar = '*' Fa Tar | e
+Ear = 'add' Ta Ear | e
+Ta = Exp Tar
+Tar = 'mult' Exp Tar | e
+Exp = Fa Expr
+Expr = '*' '*' Fa Expr | e
 Fa = 'const' | '(' Ea ')'

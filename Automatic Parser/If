@@ -16,11 +16,12 @@ Tar = 'mult' Fa Tar | e
 Fa = 'const' | '(' Ea ')'
 END
 tokenMap:
-<> = rel
-0123456789 = const
-+- = add
-*/ = mult
+<> '<=' '>=' '==' '!=' #= rel
+0123456789 #= const
++- #= add
+*/ #= mult
 END
 Codes:
 if (true) {cmd} elif (false) {cmd} else { if (true or 1 < 2) {cmd} }
+if (1 == 2 and true) {cmd}
 END

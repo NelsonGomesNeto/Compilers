@@ -1,0 +1,12 @@
+Start: Decl
+Productions:
+Decl = Var 'is' 'type'
+Var = 'id' VarR
+VarR = ',' Var | e
+END
+tokenMap:
+m = id
+i = type
+END
+Codes:
+END

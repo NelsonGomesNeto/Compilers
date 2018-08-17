@@ -1,5 +1,5 @@
 VERBOSE = 0
-separator = "{}()+-*/"
+separator = "{}()+-*/,"
 tokenMap = {}
 
 def classify(token):
@@ -67,10 +67,16 @@ def readTokenMap():
         line = input()
         if (line == "END"): break
         print("\t", line, sep='')
-        left, right = line.split('=')
-        left, right = left.strip(' '), right.strip(' ')
+        left, right = line.split('#=')
+        left, right = left.split(' '), right.strip(' ')
         for t in left:
-            tokenMap[t] = right
+            t = t.strip(' ')
+            if (not t): continue
+            if t[0] == '\'':
+                tokenMap[t[1:len(t)-1]] = right
+            else:
+                for tt in t:
+                    tokenMap[tt] = right
     return(tokenMap)
 
 def buildLevel(S, tree):
@@ -150,12 +156,12 @@ for code in codes:
     print("Code:", *code, "|", code)
     tree = []
     try:
-        ac = parseCode(S, er, code, 0, tree, 1) >= len(code)
+        ac = parseCode(S, er, code, 0, tree, 1)
     except:
         ac = 0
-    print("\tAC" if ac else "ERROR at level: %d" % (ac))
+    print("\tAC" if ac >= len(code) else "ERROR at level: %d" % (ac))
 
-    if (ac):
+    if (ac >= len(code)):
         tree.sort(key=lambda x:x[0])
         print("\trawTree:", tree)
         level = buildLevel(S, tree)

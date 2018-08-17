@@ -1,0 +1,17 @@
+Start: Function
+Productions:
+Function = 'function' 'id' '(' Param ')' 'is' Type '{' Cmd '}'
+Cmd = 'cmd'
+Param = 'id' 'is' 'type' ParamR | e
+ParamR = ',' Param | e
+Type = 'type' TypeR
+TypeR = ',' Type | e
+END
+tokenMap:
+'main' 'lol' 'id' #= id
+'int' 'real' 'string' #= type
+END
+Codes:
+function main() is int { cmd }
+function main(id is int, id is real) is string { cmd }
+END
