@@ -1,8 +1,6 @@
 VERBOSE = 0
-separator = "()+-"
+separator = "()+-*/"
 tokenMap = {}
-for i in range(10):
-    tokenMap[str(i)] = 'const'
 
 def classify(token):
     if (token in tokenMap):
@@ -25,11 +23,11 @@ def printGraph(graph):
             print(u, end=' ')
         print()
 
-def postOrderGraph(S, graph):
-    print(S[0]*8*" ", "[%5s]" % S[3], sep='')
+def preOrderGraph(S, nonTerminal, graph):
+    print(S[0]*8*" ", "[%5s]" % (S[3] if S[3] == 'e' or S[3] in nonTerminal else (str(S[3][0])+", "+str(S[3][1]))), sep='')
     if (S not in graph): return
     for u in graph[S]:
-        postOrderGraph(u, graph)
+        preOrderGraph(u, nonTerminal, graph)
 
 def readER():
     print("Reading:", input())
@@ -61,6 +59,18 @@ def readCodes():
             line = line.replace(s, " " + s + " ")
         codes += [line.split()]
     return(codes)
+
+def readTokenMap():
+    print("Reading:", input())
+    tokenMap = {}
+    while (True):
+        line = input()
+        if (line == "END"): break
+        left, right = line.split('=')
+        left, right = left.strip(' '), right.strip(' ')
+        for t in left:
+            tokenMap[t] = right
+    return(tokenMap)
 
 def buildLevel(S, tree):
     level = [[[0, [S]]]]
@@ -103,18 +113,22 @@ def parseCode(S, er, code, codePointer, tree, depth):
     prev = codePointer
     for production in er[S]:
         codePointer = prev
+        finalProduction = []
         for i, element in enumerate(production):
             if (element == 'e'): break
             if (element in er):
                 found = parseCode(element, er, code, codePointer, tree, depth + 1)
                 if (found == -1): break
-                else: codePointer = found
+                else:
+                    finalProduction += [element]
+                    codePointer = found
             elif (codePointer < len(code) and element == classify(code[codePointer])):
+                finalProduction += [(element, code[codePointer])]
                 codePointer += 1
             else:
                 break
         else:
-            tree += [[depth, production]]
+            tree += [[depth, finalProduction]]#[[depth, production]]
             return(codePointer)
     else:
         if (['e'] in er[S]):
@@ -125,6 +139,8 @@ def parseCode(S, er, code, codePointer, tree, depth):
 S = input().split()[1]
 er, nonTerminal = readER()
 printER(er, nonTerminal)
+
+tokenMap = readTokenMap()
 
 print()
 codes = readCodes()
@@ -147,4 +163,4 @@ for code in codes:
         graph = buildGraph(er, level)
         # printGraph(graph)
         print()
-        postOrderGraph((0, 0, 0, S), graph)
+        preOrderGraph((0, 0, 0, S), nonTerminal, graph)

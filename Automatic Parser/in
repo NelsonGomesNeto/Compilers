@@ -1,13 +1,18 @@
 Start: Ea
 Productions:
 Ea = Ta Ear
-Ear = '+' Ta Ear | e
+Ear = 'add' Ta Ear | e
 Ta = Fa Tar
-Tar = '*' Fa Tar | e
+Tar = 'mult' Fa Tar | e
 Fa = 'const' | '(' Ea ')'
 END
+tokenMap:
+0123456789 = const
++- = add
+*/ = mult
+END
 Codes:
-1 + 2 * 3
+((1+2)/3)
 END
 Ea = Ta Ear
 Ear = '+' Ta Ear | e
