@@ -1,3 +1,26 @@
 Start: If
-If = 'if' 'Eb' 'then' LIf 'elif'
-LIf = ''
+Productions:
+If = 'if' '(' Eb ')' '{' Cmd '}' Elif Else
+Cmd = If | 'cmd'
+Elif = 'elif' '(' Eb ')' '{' Cmd '}' | e
+Else = 'else' '{' Cmd '}' | e
+Eb = Tb Ebr
+Ebr = 'or' Tb Ebr | e
+Tb = Fb Tbr
+Tbr = 'and' Fb Tbr | e
+Fb = 'not' Fb | 'true' | 'false' | '(' Eb ')' | 'id' | Ea 'rel' Ea
+Ea = Ta Ear
+Ear = 'add' Ta Ear | e
+Ta = Fa Tar
+Tar = 'mult' Fa Tar | e
+Fa = 'const' | '(' Ea ')'
+END
+tokenMap:
+<> = rel
+0123456789 = const
++- = add
+*/ = mult
+END
+Codes:
+if (true) {cmd} elif (false) {cmd} else { if (true or 1 < 2) {cmd} }
+END

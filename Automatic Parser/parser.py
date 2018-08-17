@@ -1,5 +1,5 @@
 VERBOSE = 0
-separator = "()+-*/"
+separator = "{}()+-*/"
 tokenMap = {}
 
 def classify(token):
