@@ -66,6 +66,7 @@ def readTokenMap():
     while (True):
         line = input()
         if (line == "END"): break
+        print("\t", line, sep='')
         left, right = line.split('=')
         left, right = left.strip(' '), right.strip(' ')
         for t in left:
@@ -148,7 +149,10 @@ for code in codes:
     print()
     print("Code:", *code, "|", code)
     tree = []
-    ac = parseCode(S, er, code, 0, tree, 1) >= len(code)
+    try:
+        ac = parseCode(S, er, code, 0, tree, 1) >= len(code)
+    except:
+        ac = 0
     print("\tAC" if ac else "ERROR at level: %d" % (ac))
 
     if (ac):

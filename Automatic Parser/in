@@ -12,7 +12,7 @@ tokenMap:
 */ = mult
 END
 Codes:
-((1+2)/3)
+((1+2)/3-3)
 END
 Ea = Ta Ear
 Ear = '+' Ta Ear | e
