@@ -23,11 +23,24 @@ def printGraph(graph):
             print(u, end=' ')
         print()
 
+def tokenBox(S, nonTerminal):
+    return("[%5s]" % (S[3] if S[3] == 'e' or S[3] in nonTerminal else (str(S[3][0])+", "+str(S[3][1]))))
+
 def preOrderGraph(S, nonTerminal, graph):
-    print(S[0]*8*" ", "[%5s]" % (S[3] if S[3] == 'e' or S[3] in nonTerminal else (str(S[3][0])+", "+str(S[3][1]))), sep='')
+    print(S[0]*8*" ", tokenBox(S, nonTerminal), sep='')
     if (S not in graph): return
     for u in graph[S]:
         preOrderGraph(u, nonTerminal, graph)
+
+def fillSpacing(S, nonTerminal, graph, spacing, now):
+    spacing[S] = now
+    if (S not in graph): return(len(tokenBox(S, nonTerminal)))
+    prev = now
+    for u in graph[S]:
+        aux = fillSpacing(u, nonTerminal, graph, spacing, prev)
+        now += aux
+    spacing[S] = now
+    return(now + len(tokenBox(S, nonTerminal)))
 
 def readER():
     print("Reading:", input())
@@ -154,12 +167,12 @@ codes = readCodes()
 for code in codes:
     print()
     print("Code:", *code, "|", code)
-    tree = []
+    tree, ac = [], -1
     try:
         ac = parseCode(S, er, code, 0, tree, 1)
     except:
-        ac = 0
-    print("\tAC" if ac >= len(code) else "ERROR at level: %d" % (ac))
+        pass
+    print("\tAC" if ac >= len(code) else "ERROR at token: %d" % (ac))
 
     if (ac >= len(code)):
         tree.sort(key=lambda x:x[0])
@@ -170,7 +183,18 @@ for code in codes:
             for l in level[i]:
                 print(l[1], end=' ')
             print()
+
         graph = buildGraph(er, level)
         # printGraph(graph)
         print()
         preOrderGraph((0, 0, 0, S), nonTerminal, graph)
+
+        spacing = {}
+        fillSpacing((0, 0, 0, S), nonTerminal, graph, spacing, 0)
+        at = 0
+        for s in sorted(spacing, key=lambda x:(x[0], x[1], x[2])):
+            if (s[0] > at):
+                print()
+                at = s[0]
+            print(s, spacing[s], end=' ')
+        print()
