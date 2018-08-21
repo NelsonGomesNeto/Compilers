@@ -33,14 +33,13 @@ def preOrderGraph(S, nonTerminal, graph):
         preOrderGraph(u, nonTerminal, graph)
 
 def fillSpacing(S, nonTerminal, graph, spacing, now):
-    spacing[S] = now
+    spacing[S] = [now, now + len(tokenBox(S, nonTerminal))]
     if (S not in graph): return(len(tokenBox(S, nonTerminal)))
-    prev = now
+    now += len(tokenBox(S, nonTerminal))
     for u in graph[S]:
-        aux = fillSpacing(u, nonTerminal, graph, spacing, prev)
-        now += aux
-    spacing[S] = now
-    return(now + len(tokenBox(S, nonTerminal)))
+        now += fillSpacing(u, nonTerminal, graph, spacing, 0)
+    spacing[S][1] = now
+    return(now)
 
 def readER():
     print("Reading:", input())
@@ -196,5 +195,5 @@ for code in codes:
             if (s[0] > at):
                 print()
                 at = s[0]
-            print(s, spacing[s], end=' ')
+            print(tokenBox(s, nonTerminal) + spacing[s][1]*" ", end='')
         print()
