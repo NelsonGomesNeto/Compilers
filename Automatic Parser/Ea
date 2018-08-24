@@ -12,8 +12,8 @@ tokenMap:
 */ #= mult
 END
 Codes:
-((1+2)/3-3)
-(1+1)
+1+1
+(1+(2*3))
 END
 ## The problem of having exp is that '*' is a separator
 Ea = Ta Ear

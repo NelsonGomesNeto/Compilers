@@ -32,6 +32,18 @@ def preOrderGraph(S, nonTerminal, graph):
     for u in graph[S]:
         preOrderGraph(u, nonTerminal, graph)
 
+global string
+def interestingPrint(S, nonTerminal, graph, notFirst):
+    global string
+    if (S not in graph):
+        # print(" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst else " ", tokenBox(S, nonTerminal), sep='')
+        string += (" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst else " ") + tokenBox(S, nonTerminal) + "\n"
+        return
+    # print(" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst and S[0] else (S[0]>0)*" ", tokenBox(S, nonTerminal), sep='', end='')
+    string += (" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst and S[0] else (S[0]>0)*" ") + tokenBox(S, nonTerminal)
+    for i, u in enumerate(graph[S]):
+        interestingPrint(u, nonTerminal, graph, i)
+
 def fillSpacing(S, nonTerminal, graph, spacing, now):
     spacing[S] = [now, now + len(tokenBox(S, nonTerminal))]
     if (S not in graph): return(len(tokenBox(S, nonTerminal)))
@@ -185,15 +197,19 @@ for code in codes:
 
         graph = buildGraph(er, level)
         # printGraph(graph)
-        print()
+        print("Pre-Order:")
         preOrderGraph((0, 0, 0, S), nonTerminal, graph)
+        print("Interesting-Print:")
+        string = ""
+        interestingPrint((0, 0, 0, S), nonTerminal, graph, 1)
+        lines = string.splitlines()
+        for l in range(len(lines)):
+            for i in range(len(lines[l])):
+                if (lines[l][i] == '|'):
+                    for j in range(l - 1, -1, -1):
+                        if (lines[j][i + 2] == ']'):
+                            break
+                        lines[j] = lines[j][:i] + '|' + lines[j][i+1:]
+        for line in lines:
+            print(line)
 
-        spacing = {}
-        fillSpacing((0, 0, 0, S), nonTerminal, graph, spacing, 0)
-        at = 0
-        for s in sorted(spacing, key=lambda x:(x[0], x[1], x[2])):
-            if (s[0] > at):
-                print()
-                at = s[0]
-            print(tokenBox(s, nonTerminal) + spacing[s][1]*" ", end='')
-        print()
