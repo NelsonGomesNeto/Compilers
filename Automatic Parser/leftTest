@@ -1,0 +1,13 @@
+Start: S
+Productions:
+S = Y
+Y = X | B
+X = 'a' 'a'
+B = 'a' 'a' 'b'
+END
+tokenMap:
+END
+Codes:
+a a
+a a b
+END

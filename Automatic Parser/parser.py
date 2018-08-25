@@ -24,10 +24,10 @@ def printGraph(graph):
         print()
 
 def tokenBox(S, nonTerminal):
-    return("[%5s]" % (S[3] if S[3] == 'e' or S[3] in nonTerminal else (str(S[3][0])+", "+str(S[3][1]))))
+    return("[%10s]" % (S[3] if S[3] == 'e' or S[3] in nonTerminal else (str(S[3][0])+", "+str(S[3][1]))))
 
 def preOrderGraph(S, nonTerminal, graph):
-    print(S[0]*8*" ", tokenBox(S, nonTerminal), sep='')
+    print(S[0]*13*" ", tokenBox(S, nonTerminal), sep='')
     if (S not in graph): return
     for u in graph[S]:
         preOrderGraph(u, nonTerminal, graph)
@@ -37,10 +37,10 @@ def interestingPrint(S, nonTerminal, graph, notFirst):
     global string
     if (S not in graph):
         # print(" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst else " ", tokenBox(S, nonTerminal), sep='')
-        string += (" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst else " ") + tokenBox(S, nonTerminal) + "\n"
+        string += (" "*9 + ((S[0]-1)*16)*" " + "|" + 4*"-" + "> " if notFirst else " -> ") + tokenBox(S, nonTerminal) + "\n"
         return
     # print(" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst and S[0] else (S[0]>0)*" ", tokenBox(S, nonTerminal), sep='', end='')
-    string += (" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst and S[0] else (S[0]>0)*" ") + tokenBox(S, nonTerminal)
+    string += (" "*9 + ((S[0]-1)*16)*" " + "|" + 4*"-" + "> " if notFirst and S[0] else (S[0]>0)*" -> ") + tokenBox(S, nonTerminal)
     for i, u in enumerate(graph[S]):
         interestingPrint(u, nonTerminal, graph, i)
 
@@ -197,8 +197,8 @@ for code in codes:
 
         graph = buildGraph(er, level)
         # printGraph(graph)
-        print("Pre-Order:")
-        preOrderGraph((0, 0, 0, S), nonTerminal, graph)
+        # print("Pre-Order:")
+        # preOrderGraph((0, 0, 0, S), nonTerminal, graph)
         print("Interesting-Print:")
         string = ""
         interestingPrint((0, 0, 0, S), nonTerminal, graph, 1)
