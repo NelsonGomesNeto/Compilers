@@ -1,0 +1,14 @@
+Start: Start
+Productions:
+Start = 'L' Left
+Left = 'L' Left | 'D' Left | '_' Right | e
+Right = 'L' End | 'D' End
+End = 'L' End | 'D' End | '_' Right | e
+END
+tokenMap:
+0123456789 #= D
+abcdefghijklmnopqrstuvwxyz #= L
+END
+Codes:
+a b 1 _ 0
+END

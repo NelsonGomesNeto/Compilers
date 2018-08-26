@@ -1,6 +1,11 @@
 VERBOSE = 0
+COLORED = 1
 separator = "{}()+-*/,"
 tokenMap = {}
+class colors:
+    blue = "\033[93m"
+    green = "\033[92m"
+    end = "\033[0m"
 
 def classify(token):
     if (token in tokenMap):
@@ -24,7 +29,7 @@ def printGraph(graph):
         print()
 
 def tokenBox(S, nonTerminal):
-    return("[%10s]" % (S[3] if S[3] == 'e' or S[3] in nonTerminal else (str(S[3][0])+", "+str(S[3][1]))))
+    return("[%10s]" % ((colors.blue*COLORED if S[3] == 'e' else "")+S[3]+(colors.end*COLORED if S[3] == 'e' else "") if (S[3] == 'e' or S[3] in nonTerminal) else (colors.green*COLORED+str(S[3][0])+", "+str(S[3][1])+colors.end*COLORED)))
 
 def preOrderGraph(S, nonTerminal, graph):
     print(S[0]*13*" ", tokenBox(S, nonTerminal), sep='')
@@ -197,8 +202,8 @@ for code in codes:
 
         graph = buildGraph(er, level)
         # printGraph(graph)
-        # print("Pre-Order:")
-        # preOrderGraph((0, 0, 0, S), nonTerminal, graph)
+        print("Pre-Order:")
+        preOrderGraph((0, 0, 0, S), nonTerminal, graph)
         print("Interesting-Print:")
         string = ""
         interestingPrint((0, 0, 0, S), nonTerminal, graph, 1)
