@@ -1,0 +1,13 @@
+Start: S
+Productions:
+S = A B D C
+A = 'a' | e
+B = 'b' | e
+C = Ar Br 'c'
+Ar = 'a' | e
+Br = 'b' | e
+D = e
+END
+tokenMap:
+END
+END

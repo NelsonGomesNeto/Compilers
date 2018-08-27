@@ -19,13 +19,13 @@ def buildLevel(S, tree):
         level[nowLevel] += [tree[i]]
     return(level)
 
-def buildGraph(er, level):
+def buildGraph(grammar, level):
     graph = {}
     for i in range(len(level)):
         di, dj = 0, 0
         for jj, j in enumerate(level[i]):
             if (i):
-                while (level[i - 1][di][1][dj] not in er):
+                while (level[i - 1][di][1][dj] not in grammar):
                     dj += 1
                     if (dj >= len(level[i - 1][di][1])):
                         dj = 0
@@ -40,20 +40,20 @@ def buildGraph(er, level):
                     dj = 0
                     di += 1
             for kk, k in enumerate(j[1]):
-                if (k not in er): continue
+                if (k not in grammar): continue
                 graph[(i, jj, kk, k)] = []
     return(graph)
 
-def topDownRecursive(S, er, code, codePointer, tree, depth):
+def topDownRecursive(S, grammar, code, codePointer, tree, depth):
     if (VERBOSE): print(S, codePointer)
     prev = codePointer
-    for production in er[S]:
+    for production in grammar[S]:
         codePointer = prev
         finalProduction = []
         for i, element in enumerate(production):
             if (element == 'e'): break
-            if (element in er):
-                found = topDownRecursive(element, er, code, codePointer, tree, depth + 1)
+            if (element in grammar):
+                found = topDownRecursive(element, grammar, code, codePointer, tree, depth + 1)
                 if (found == -1): break
                 else:
                     finalProduction += [element]
@@ -67,14 +67,37 @@ def topDownRecursive(S, er, code, codePointer, tree, depth):
             tree += [[depth, finalProduction]]#[[depth, production]]
             return(codePointer)
     else:
-        if (['e'] in er[S]):
+        if (['e'] in grammar[S]):
             tree += [[depth, ['e']]]
             return(prev)
     return(-1)
 
+def first(production, grammar, nonTerminal):
+    if (production == ['e']): return(['e'])
+    firstSet, hasEpi = set(), 0
+    for element in production:
+        done = 1
+        if (element not in nonTerminal): return([element])
+        elif (['e'] in grammar[element]): hasEpi, done = hasEpi + 1, 0
+        if (element in nonTerminal):
+            insideEpi = False
+            for p in grammar[element]:
+                firstMinusEpi = first(p, grammar, nonTerminal)
+                firstSet.update(firstMinusEpi)
+                if ('e' in firstMinusEpi):
+                    insideEpi = True
+                    firstSet.remove('e')
+            if (not insideEpi): break
+            else: hasEpi += done
+    else:
+        if (hasEpi >= len(production)): firstSet.add('e')
+    return(firstSet)
+
 S = input().split()[1]
-er, nonTerminal = readER()
-printER(er, nonTerminal)
+grammar, nonTerminal = readER()
+printER(grammar, nonTerminal)
+for n in nonTerminal:
+    print("first(%s) =" % n, first([n], grammar, nonTerminal))
 
 if (CODES):
     print()
@@ -85,7 +108,7 @@ if (CODES):
     for code in codes:
         print("\nCode:", *code) #, "|", code)
         tree, cp = [], -1
-        try: cp = topDownRecursive(S, er, code, 0, tree, 1)
+        try: cp = topDownRecursive(S, grammar, code, 0, tree, 1)
         except: pass
         print("\tVerdict: " + ((colors.green+"Accepted"+colors.end) if cp >= len(code) else (colors.red+"ERROR at token: %d" % (cp)+colors.end)))
 
@@ -94,7 +117,7 @@ if (CODES):
             print("\trawTree:", tree)
             level = buildLevel(S, tree)
             # printLevel(level)
-            graph = buildGraph(er, level)
+            graph = buildGraph(grammar, level)
             # printGraph(graph)
             # print("Pre-Order:")
             # preOrderGraph((0, 0, 0, S), nonTerminal, graph)
