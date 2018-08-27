@@ -1,7 +1,7 @@
 from Printing import *
 from Reading import *
 VERBOSE = 0
-CODES = 0
+CODES = 1
 
 def classify(token):
     if (token in tokenMap):
@@ -77,7 +77,9 @@ def first(production, grammar, nonTerminal):
     firstSet, hasEpi = set(), 0
     for element in production:
         done = 1
-        if (element not in nonTerminal): return([element])
+        if (element not in nonTerminal):
+            firstSet.add(element)
+            break
         elif (['e'] in grammar[element]): hasEpi, done = hasEpi + 1, 0
         if (element in nonTerminal):
             insideEpi = False
@@ -93,11 +95,33 @@ def first(production, grammar, nonTerminal):
         if (hasEpi >= len(production)): firstSet.add('e')
     return(firstSet)
 
+def follow(X, S, grammar, nonTerminal):
+    followSet = set()
+    if (X == S): followSet.add("EOF")
+    for A in nonTerminal:
+        for production in grammar[A]:
+            if (X in production):
+                position, isLast = production.index(X), False
+                isLast = position == len(production) - 1
+                if (position < len(production) - 1):
+                    firstMinusEpi = first(production[position+1:], grammar, nonTerminal)
+                    followSet.update(firstMinusEpi)
+                    if ('e' in firstMinusEpi): isLast = True
+                if (isLast):
+                    if (X == A): continue
+                    followSet.update(follow(A, S, grammar, nonTerminal))
+    if ('e' in followSet): followSet.remove('e')
+    return(followSet)
+
 S = input().split()[1]
 grammar, nonTerminal = readER()
 printER(grammar, nonTerminal)
+print("\nFirst")
 for n in nonTerminal:
-    print("first(%s) =" % n, first([n], grammar, nonTerminal))
+    print("\tfirst(%s) =" % n, sorted(first([n], grammar, nonTerminal)))
+print("\nFollow:")
+for n in nonTerminal:
+    print("\tfollow(%s) =" % n, sorted(follow(n, S, grammar, nonTerminal)))
 
 if (CODES):
     print()
