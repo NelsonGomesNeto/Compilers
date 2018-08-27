@@ -1,4 +1,5 @@
 # Automatic Parser
+# WARNING, ADDING SOME OTHER PARSERS AND STUFF!!!!
 ## Simple project aiming to implement a *generic* recursive descent parser
 ## It can do *anything* a predictive recursive parser can do
 You can find an input example in "Ea" file
