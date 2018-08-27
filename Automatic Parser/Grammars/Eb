@@ -7,7 +7,10 @@ Tbr = 'and' Fb Tbr | e
 Fb = 'not' Fb | 'true' | 'false' | '(' Eb ')' | 'id'
 END
 tokenMap:
+abcdefghijklmnopqrstuvwxz #= id
 END
 Codes:
 true or (false and not false) or not (true or false)
+a or b and not c
+a or
 END

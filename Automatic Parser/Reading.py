@@ -1,5 +1,4 @@
 separator = "{}()+-*/,"
-tokenMap = {}
 
 def readER():
     print("Reading:", input())

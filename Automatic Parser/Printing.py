@@ -35,13 +35,13 @@ def productionAsString(production):
 
 def printParsingTable(parsingTable, terminals):
     print("\nParsing Table:")
-    print(end=" "*13)
-    for t in terminals: print("|%10s|" % t, end=' ')
+    print(end=" "*12)
+    for t in terminals: print("|%10s|" % t, end='')
     print("|%10s|" % "EOF")
     for n in parsingTable:
-        print("|%10s|" % n, end=' ')
+        print("|%10s|" % n, end='')
         for t in terminals:
-            print("|%s%10s%s|" % productionAsString(parsingTable[n][t]), end=' ')
+            print("|%s%10s%s|" % productionAsString(parsingTable[n][t]), end='')
         print("|%s%10s%s|" % productionAsString(parsingTable[n]["EOF"]))
 
 def printLevel(level):
@@ -50,6 +50,10 @@ def printLevel(level):
         for l in level[i]:
             print(l[1], end=' ')
         print()
+
+def lolPrint(tree):
+    for l in tree:
+        print(" "*5*l[0], l[1] if len(l) == 2 else l[2])
 
 def printGraph(graph):
     print(graph)
