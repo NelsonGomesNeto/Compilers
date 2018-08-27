@@ -3,14 +3,14 @@ tokenMap = {}
 
 def readER():
     print("Reading:", input())
-    er, nonTerminal = {}, []
+    er, nonTerminals, terminals = {}, [], []
     while (True):
         line = input()
         if (line == "END"): break
         left, right = line.split('=')
         left = left.strip(' ')
         er[left] = []
-        nonTerminal += [left]
+        nonTerminals += [left]
         for production in right.split('|'):
             production = production.split()
             er[left] += [production]
@@ -19,7 +19,8 @@ def readER():
             for i in range(len(p)):
                 if (p[i] not in er and p[i] != 'e'):
                     er[e][j][i] = p[i][1:len(p[i])-1]
-    return(er, nonTerminal)
+                    terminals += [er[e][j][i]]
+    return(er, nonTerminals, terminals)
 
 def readCodes():
     print("Reading:", input())

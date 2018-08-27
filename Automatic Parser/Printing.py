@@ -1,24 +1,50 @@
 COLORED = 1
 
 class colors:
-    blue = "\033[93m"
+    yellow = "\033[93m"
     green = "\033[92m"
     red = "\033[91m"
+    blue = "\033[96m"
     end = "\033[0m"
 
 class effect: # Doesn't seem to work .-.
     bold = "\033[1m"
     end = "\033[21m"
 
-def printER(er, nonTerminal = None):
-    for rule in (nonTerminal if nonTerminal is not None else er):
+def printER(er, nonTerminals = None):
+    for rule in (nonTerminals if nonTerminals is not None else er):
         print("\t", rule, " = ", sep='', end='')
         for i, production in enumerate(er[rule]):
             if (i): print(" | ", end='')
             print(*production, end='')
         print()
 
-def printLevel(leve):
+def printAuxFunction(name, grammarSet, nonTerminals):
+    print(name)
+    for n in nonTerminals:
+        print("\t%s(%s) =" % (name, n), grammarSet[n])
+
+def productionAsString(production):
+    s = [colors.green, "", colors.end]
+    if (production == ["Error"]): s[0] = colors.red
+    if (production == ['e']): s[0] = colors.yellow
+    for i, p in enumerate(production):
+        if (i): s[1] += " "
+        s[1] += str(p)
+    return(tuple(s))
+
+def printParsingTable(parsingTable, terminals):
+    print("\nParsing Table:")
+    print(end=" "*13)
+    for t in terminals: print("|%10s|" % t, end=' ')
+    print("|%10s|" % "EOF")
+    for n in parsingTable:
+        print("|%10s|" % n, end=' ')
+        for t in terminals:
+            print("|%s%10s%s|" % productionAsString(parsingTable[n][t]), end=' ')
+        print("|%s%10s%s|" % productionAsString(parsingTable[n]["EOF"]))
+
+def printLevel(level):
     for i in range(len(level)):
         print("\tLevel %d: " % i, end='')
         for l in level[i]:
@@ -33,35 +59,35 @@ def printGraph(graph):
             print(u, end=' ')
         print()
 
-def tokenBox(S, nonTerminal):
-    return("[%10s]" % ((colors.blue*COLORED if S[3] == 'e' else "")+S[3]+(colors.end*COLORED if S[3] == 'e' else "") if (S[3] == 'e' or S[3] in nonTerminal) else (colors.green*COLORED+str(S[3][0])+", "+str(S[3][1])+colors.end*COLORED)))
+def tokenBox(S, nonTerminals):
+    return("[%10s]" % ((colors.yellow*COLORED if S[3] == 'e' else "")+S[3]+(colors.end*COLORED if S[3] == 'e' else "") if (S[3] == 'e' or S[3] in nonTerminals) else (colors.green*COLORED+str(S[3][0])+", "+str(S[3][1])+colors.end*COLORED)))
 
-def preOrderGraph(S, nonTerminal, graph):
-    print(S[0]*13*" ", tokenBox(S, nonTerminal), sep='')
+def preOrderGraph(S, nonTerminals, graph):
+    print(S[0]*13*" ", tokenBox(S, nonTerminals), sep='')
     if (S not in graph): return
     for u in graph[S]:
-        preOrderGraph(u, nonTerminal, graph)
+        preOrderGraph(u, nonTerminals, graph)
 
 def resetString():
     global string
     string = ""
 
 global string
-def prepateInterestingPrint(S, nonTerminal, graph, notFirst):
+def prepateInterestingPrint(S, nonTerminals, graph, notFirst):
     global string
     if (S not in graph):
-        # print(" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst else " ", tokenBox(S, nonTerminal), sep='')
-        string += (" "*9 + ((S[0]-1)*16)*" " + "|" + 4*"-" + "> " if notFirst else " -> ") + tokenBox(S, nonTerminal) + "\n"
+        # print(" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst else " ", tokenBox(S, nonTerminals), sep='')
+        string += (" "*9 + ((S[0]-1)*16)*" " + "|" + 4*"-" + "> " if notFirst else " -> ") + tokenBox(S, nonTerminals) + "\n"
         return
-    # print(" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst and S[0] else (S[0]>0)*" ", tokenBox(S, nonTerminal), sep='', end='')
-    string += (" "*9 + ((S[0]-1)*16)*" " + "|" + 4*"-" + "> " if notFirst and S[0] else (S[0]>0)*" -> ") + tokenBox(S, nonTerminal)
+    # print(" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst and S[0] else (S[0]>0)*" ", tokenBox(S, nonTerminals), sep='', end='')
+    string += (" "*9 + ((S[0]-1)*16)*" " + "|" + 4*"-" + "> " if notFirst and S[0] else (S[0]>0)*" -> ") + tokenBox(S, nonTerminals)
     for i, u in enumerate(graph[S]):
-        prepateInterestingPrint(u, nonTerminal, graph, i)
+        prepateInterestingPrint(u, nonTerminals, graph, i)
 
-def interestingPrint(S, nonTerminal, graph, notFirst):
+def interestingPrint(S, nonTerminals, graph, notFirst):
     global string
     string = ""
-    prepateInterestingPrint(S, nonTerminal, graph, notFirst)
+    prepateInterestingPrint(S, nonTerminals, graph, notFirst)
     lines = string.splitlines()
     for l in range(len(lines)):
         for i in range(len(lines[l])):
