@@ -5,8 +5,9 @@ Var = 'id' VarR
 VarR = ',' Var | e
 END
 tokenMap:
-m = id
-i = type
+m #= id
+i #= type
 END
 Codes:
+m, m is i
 END

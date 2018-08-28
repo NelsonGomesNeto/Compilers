@@ -51,7 +51,7 @@ printER(grammar, nonTerminals)
 grammarFirst, grammarFollow = {}, {}
 for n in nonTerminals:
     grammarFirst[n] = sorted(first([n], grammar, nonTerminals))
-    grammarFollow[n] = sorted(follow(n, S, grammar, nonTerminals))
+    grammarFollow[n] = sorted(follow(n, S, grammar, nonTerminals, set()))
 print()
 printAuxFunction("First", grammarFirst, nonTerminals)
 print()

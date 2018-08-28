@@ -26,24 +26,26 @@ def first(production, grammar, nonTerminals):
         if (hasEpi >= len(production)): firstSet.add('e')
     return(firstSet)
 
-def follow(X, S, grammar, nonTerminals):
+def follow(X, S, grammar, nonTerminals, visited):
     followSet = set()
     if (X == S): followSet.add("EOF")
     for A in nonTerminals:
         for production in grammar[A]:
             if (X in production):
-                position, isLast = production.index(X), False
-                isLast = position == len(production) - 1
-                if (position < len(production) - 1):
-                    firstMinusEpi = first(production[position+1:], grammar, nonTerminals)
-                    prevSize = len(followSet)
-                    followSet.update(firstMinusEpi)
-                    if (len(followSet) == prevSize): return(followSet)
-                    if ('e' in firstMinusEpi): isLast = True
+                isLast = False
+                for position, p in enumerate(production):
+                    if (p != X): continue
+                    isLast = position == len(production) - 1
+                    if (position < len(production) - 1):
+                        firstMinusEpi = first(production[position+1:], grammar, nonTerminals)
+                        prevSize = len(followSet)
+                        followSet.update(firstMinusEpi)
+                        # if (len(followSet) == prevSize): return(followSet)
+                        if ('e' in firstMinusEpi): isLast = True
                 if (isLast):
                     if (X == A): continue
-                    prevSize = len(followSet)
-                    followSet.update(follow(A, S, grammar, nonTerminals))
-                    if (len(followSet) == prevSize): return(followSet)
+                    if (A not in visited):
+                        visited.add(A)
+                        followSet.update(follow(A, S, grammar, nonTerminals, visited))
     if ('e' in followSet): followSet.remove('e')
     return(followSet)

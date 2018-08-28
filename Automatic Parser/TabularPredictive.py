@@ -1,4 +1,5 @@
 from AuxFunctions import *
+VERBOSE = 0
 
 class TabularPredictive:
     tokenMap = {}
@@ -40,11 +41,12 @@ class TabularPredictive:
     def topDownTabularPredictive(self, parsingTable, S, code, nonTerminals, terminals, tree):
         stack, codePointer = [[0, S]], 0
         while (True):
+            if (VERBOSE): print(stack, code[codePointer] if codePointer < len(code) else "")
             while (stack and stack[len(stack) - 1][1] == 'e'): tree += [stack.pop(len(stack) - 1)]
             X = stack[len(stack) - 1][1] if len(stack) else None
             a = code[codePointer] if codePointer < len(code) else "EOF"
             depth = stack[len(stack) - 1][0] if len(stack) else 0
-            if (not stack and codePointer >= len(code)): return(codePointer)
+            if (not stack): return(codePointer if codePointer >= len(code) else -1)
             elif (X in terminals):
                 if (X == classify(a, self.tokenMap)):
                     tree += [stack.pop(len(stack) - 1) + [a]]
