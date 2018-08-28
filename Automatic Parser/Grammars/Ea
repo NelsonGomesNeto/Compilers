@@ -18,11 +18,3 @@ Codes:
 1+2+3
 1^2^3
 END
-## The problem of having exp is that '*' is a separator
-Ea = Ta Ear
-Ear = 'add' Ta Ear | e
-Ta = Exp Tar
-Tar = 'mult' Exp Tar | e
-Exp = Fa Expr
-Expr = '*' '*' Fa Expr | e
-Fa = 'const' | '(' Ea ')'

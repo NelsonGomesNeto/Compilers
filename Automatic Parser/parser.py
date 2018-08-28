@@ -8,6 +8,7 @@ LEVEL = 0
 RAW = 0
 TABULAR = 1
 RECURSIVE = 1
+REVERSED = 1
 
 def buildLevel(S, tree):
     level = [[[0, [S]]]]
@@ -15,9 +16,12 @@ def buildLevel(S, tree):
     for i in range(len(tree)):
         if (tree[i][0] > nowLevel):
             nowLevel = tree[i][0]
-            level[nowLevel - 1]
             level += [[]]
+        if (REVERSED): tree[i][1].reverse()
         level[nowLevel] += [tree[i]]
+    if (REVERSED):
+        for l in range(len(level)):
+            level[l].reverse()
     return(level)
 
 def buildGraph(grammar, level):
