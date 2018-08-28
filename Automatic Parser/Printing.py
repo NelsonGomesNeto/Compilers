@@ -77,7 +77,7 @@ def resetString():
     string = ""
 
 global string
-def prepateInterestingPrint(S, nonTerminals, graph, notFirst):
+def prepareInterestingPrint(S, nonTerminals, graph, notFirst):
     global string
     if (S not in graph):
         # print(" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst else " ", tokenBox(S, nonTerminals), sep='')
@@ -86,12 +86,12 @@ def prepateInterestingPrint(S, nonTerminals, graph, notFirst):
     # print(" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst and S[0] else (S[0]>0)*" ", tokenBox(S, nonTerminals), sep='', end='')
     string += (" "*9 + ((S[0]-1)*16)*" " + "|" + 4*"-" + "> " if notFirst and S[0] else (S[0]>0)*" -> ") + tokenBox(S, nonTerminals)
     for i, u in enumerate(graph[S]):
-        prepateInterestingPrint(u, nonTerminals, graph, i)
+        prepareInterestingPrint(u, nonTerminals, graph, i)
 
 def interestingPrint(S, nonTerminals, graph, notFirst):
     global string
     string = ""
-    prepateInterestingPrint(S, nonTerminals, graph, notFirst)
+    prepareInterestingPrint(S, nonTerminals, graph, notFirst)
     lines = string.splitlines()
     for l in range(len(lines)):
         for i in range(len(lines[l])):

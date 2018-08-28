@@ -49,6 +49,17 @@ def buildGraph(grammar, level):
                 graph[(i, jj, kk, k)] = []
     return(graph)
 
+def spacing(S, graph, grammar, nonTerminals, space):
+    if (S not in graph): return(0, len(tokenBox(S, nonTerminals)))
+    mini, maxi = 0, 0
+    each = {}
+    for u in graph[S]:
+        mi, ma = spacing(u, graph, grammar, nonTerminals, 0)
+        each[u] = [mi, ma]
+        mini, maxi = min(mini, mi), max(maxi, ma)
+    print(S[3], each)
+    return(mini, maxi)
+
 S = input().split()[1]
 grammar, nonTerminals, terminals = readER()
 printER(grammar, nonTerminals)
@@ -104,5 +115,6 @@ if (CODES):
             # # printGraph(graph)
             # # print("Pre-Order:")
             # # preOrderGraph((0, 0, 0, S), nonTerminals, graph)
-            print("Interesting-Print:")
-            interestingPrint((0, 0, 0, S), nonTerminals, graph, 1)
+            # print("Interesting-Print:")
+            # interestingPrint((0, 0, 0, S), nonTerminals, graph, 1)
+            spacing((0, 0, 0, S), graph, grammar, nonTerminals, 0)
