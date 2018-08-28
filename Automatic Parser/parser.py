@@ -7,7 +7,7 @@ CODES = 1
 LEVEL = 0
 RAW = 0
 TABULAR = 1
-RECURSIVE = 0
+RECURSIVE = 1
 
 def buildLevel(S, tree):
     level = [[[0, [S]]]]
@@ -95,6 +95,7 @@ if (CODES):
                 recLevel = buildLevel(S, recTree)
                 level = recLevel
                 if (LEVEL): printLevel(recLevel)
+            if (TABULAR and RECURSIVE): print("\tTree Equality: " + ((colors.green+"True") if tabTree == recTree else (colors.red+"False")) + colors.end)
             graph = buildGraph(grammar, level)
             # # printGraph(graph)
             # # print("Pre-Order:")

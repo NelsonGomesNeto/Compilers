@@ -1,4 +1,4 @@
-separator = "{}()+-*/,"
+separator = "{}()+-*/,^"
 
 def readER():
     print("Reading:", input())

@@ -2,19 +2,21 @@ Start: Ea
 Productions:
 Ea = Ta Ear
 Ear = 'add' Ta Ear | e
-Ta = Fa Tar
-Tar = 'mult' Fa Tar | e
+Ta = Exp Tar
+Tar = 'mult' Exp Tar | e
+Exp = Fa Expr
+Expr = 'exp' Exp | e
 Fa = 'const' | '(' Ea ')'
 END
 tokenMap:
 0123456789 #= const
 +- #= add
 */ #= mult
+^ #= exp
 END
 Codes:
-1+1
-(1+(2*3))
-(1+1
+1+2+3
+1^2^3
 END
 ## The problem of having exp is that '*' is a separator
 Ea = Ta Ear

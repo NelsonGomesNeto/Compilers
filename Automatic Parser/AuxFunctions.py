@@ -36,10 +36,14 @@ def follow(X, S, grammar, nonTerminals):
                 isLast = position == len(production) - 1
                 if (position < len(production) - 1):
                     firstMinusEpi = first(production[position+1:], grammar, nonTerminals)
+                    prevSize = len(followSet)
                     followSet.update(firstMinusEpi)
+                    if (len(followSet) == prevSize): return(followSet)
                     if ('e' in firstMinusEpi): isLast = True
                 if (isLast):
                     if (X == A): continue
+                    prevSize = len(followSet)
                     followSet.update(follow(A, S, grammar, nonTerminals))
+                    if (len(followSet) == prevSize): return(followSet)
     if ('e' in followSet): followSet.remove('e')
     return(followSet)
