@@ -3,9 +3,10 @@ from Reading import *
 from AuxFunctions import *
 from TabularPredictive import TabularPredictive
 from RecursiveParser import RecursiveParser
-CODES = 1
+CODES = 0
 LEVEL = 0
 RAW = 0
+AUX = 1
 TABULAR = 1
 RECURSIVE = 1
 REVERSED = 1
@@ -63,22 +64,26 @@ def spacing(S, graph, grammar, nonTerminals, space):
 S = input().split()[1]
 grammar, nonTerminals, terminals = readER()
 printER(grammar, nonTerminals)
-grammarFirst, grammarFollow = {}, {}
-for n in nonTerminals:
-    grammarFirst[n] = sorted(first([n], grammar, nonTerminals))
-    grammarFollow[n] = sorted(follow(n, S, grammar, nonTerminals, set()))
-print()
-printAuxFunction("First", grammarFirst, nonTerminals)
-print()
-printAuxFunction("Follow", grammarFollow, nonTerminals)
+if (AUX):
+    grammarFirst, grammarFollow = {}, {}
+    for n in nonTerminals:
+        grammarFirst[n] = sorted(first([n], grammar, nonTerminals, set()))
+        grammarFollow[n] = sorted(follow(n, S, grammar, nonTerminals, set()))
+    print()
+    printAuxFunction("First", grammarFirst, nonTerminals)
+    print()
+    printAuxFunction("Follow", grammarFollow, nonTerminals)
+
+print("\nClosure:")
+C = buildC(S, grammar, nonTerminals)
 
 print()
 tokenMap = readTokenMap()
 
 tabularPredictive = TabularPredictive(tokenMap)
 recursiveParser = RecursiveParser(tokenMap)
-parsingTable = tabularPredictive.buildParsingTable(grammar, grammarFirst, grammarFollow, nonTerminals, terminals)
-printParsingTable(parsingTable, terminals)
+# parsingTable = tabularPredictive.buildParsingTable(grammar, grammarFirst, grammarFollow, nonTerminals, terminals)
+# printParsingTable(parsingTable, terminals)
 
 if (CODES):
     print()

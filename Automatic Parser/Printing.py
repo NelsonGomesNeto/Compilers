@@ -44,6 +44,20 @@ def printParsingTable(parsingTable, terminals):
             print("|%s%10s%s|" % productionAsString(parsingTable[n][t]), end='')
         print("|%s%10s%s|" % productionAsString(parsingTable[n]["EOF"]))
 
+def printClosureBox(closureBox):
+    print(closureBox[1][0], closureBox[1][1], end='')
+    for i, c in enumerate(closureBox[1][2]):
+        if (i == closureBox[0]): print(end=colors.red+' .'+colors.end)
+        print(end=' ' + colors.green+c+colors.end)
+    if (closureBox[0] == len(closureBox[1][2])): print(end=colors.red+' .'+colors.end)
+
+def printClosure(closureSet):
+    print(end='{')
+    for i, cl in enumerate(closureSet):
+        if (i): print(end=', ')
+        printClosureBox(cl)
+    print(end='}\n')
+
 def printLevel(level):
     for i in range(len(level)):
         print("\tLevel %d: " % i, end='')

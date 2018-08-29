@@ -1,0 +1,8 @@
+Start: S
+Productions:
+S = 'a' | '[' L ']'
+L = L ';' S | S
+END
+tokenMap:
+END
+END

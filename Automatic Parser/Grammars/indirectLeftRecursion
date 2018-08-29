@@ -1,0 +1,9 @@
+Start: A
+Productions:
+A = B | C
+B = 'b'
+C = A | 'c'
+END
+tokenMap:
+END
+END
