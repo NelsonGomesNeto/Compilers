@@ -1,0 +1,11 @@
+Start: E
+Productions:
+E = E '+' T | T
+T = T '*' F | F
+F = '(' E ')' | 'id'
+END
+tokenMap:
+END
+Codes:
+[a;a]
+END

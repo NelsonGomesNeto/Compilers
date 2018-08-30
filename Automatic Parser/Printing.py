@@ -47,7 +47,9 @@ def printParsingTable(parsingTable, terminals):
 def printSLRTable(SLRTable, terminals, nonTerminals):
     print("\nSLR Table:")
     print(end=" "*12)
-    column = terminals + ["EOF"] + nonTerminals
+    lol = sorted(terminals)
+    lol.reverse()
+    column = lol + ["EOF"] + nonTerminals
     for c in column: print(("|%s%10s%s|" % (colors.yellow,c,colors.end)) if c == "EOF" else "|%10s|" % c, end='')
     print()
     for I in sorted(SLRTable, key=lambda x:int(x[2:])):

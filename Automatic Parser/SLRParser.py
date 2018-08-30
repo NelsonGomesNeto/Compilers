@@ -25,7 +25,10 @@ class SLRParser:
                 for prod in grammar[n]:
                     if ((len(prod), (n, "=", tuple(prod))) in C[i]):
                         for f in grammarFollow[n]:
-                            table[index][f] = prod
+                            table[index][f] = n # prod
         closureSet = closure(goto(C[0], S, grammar, nonTerminals), grammar, nonTerminals, set())
         table["I_%d" % C.index(closureSet)]["EOF"] = ["Accepted"]
         return(table)
+
+    def bottomUpSLRParser():
+        pass
