@@ -7,4 +7,5 @@ tokenMap:
 END
 Codes:
 [a;a]
+[a;[a]]
 END

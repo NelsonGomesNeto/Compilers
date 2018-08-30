@@ -36,7 +36,6 @@ class SLRParser:
         stack, codePointer = [[0, [""]]], 0
         while (stack):
             printSLRStack(stack)
-            if (len(stack) > 6): return(True)
             state, symbol = stack[len(stack) - 1]
             print("line", state, symbol, classify(code[codePointer], self.tokenMap) if codePointer < len(code) else "")
             action = slrTable["I_%d" % state][classify(code[codePointer], self.tokenMap) if codePointer < len(code) else "EOF"]
