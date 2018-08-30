@@ -9,7 +9,7 @@ LEVEL = 0
 RAW = 0
 AUX = 1
 TABULAR = 1
-RECURSIVE = 1
+RECURSIVE = 0
 REVERSED = 1
 
 def buildLevel(S, tree):
@@ -82,12 +82,14 @@ print()
 tokenMap = readTokenMap()
 
 tabularPredictive = TabularPredictive(tokenMap)
-recursiveParser = RecursiveParser(tokenMap)
-slrParser = SLRParser(tokenMap)
-slrTable = slrParser.buildSLRTable(C, S, grammar, terminals, nonTerminals)
-printSLRTable(slrTable, terminals, nonTerminals)
 parsingTable = tabularPredictive.buildParsingTable(grammar, grammarFirst, grammarFollow, nonTerminals, terminals)
 printParsingTable(parsingTable, terminals)
+
+recursiveParser = RecursiveParser(tokenMap)
+
+slrParser = SLRParser(tokenMap)
+slrTable = slrParser.buildSLRTable(C, S, grammar, terminals, nonTerminals, grammarFollow)
+printSLRTable(slrTable, terminals, nonTerminals)
 
 if (CODES):
     print()

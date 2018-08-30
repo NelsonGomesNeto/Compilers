@@ -6,7 +6,7 @@ class SLRParser:
     def __init__(self, tokenMap):
         self.tokenMap = tokenMap
 
-    def buildSLRTable(self, C, S, grammar, terminals, nonTerminals):
+    def buildSLRTable(self, C, S, grammar, terminals, nonTerminals, grammarFollow):
         table = {}
         eofTerminals = terminals + ["EOF"]
         for i in range(len(C)):
@@ -24,7 +24,7 @@ class SLRParser:
                     table[index][n] = ["%d" % C.index(closureSet)]
                 for prod in grammar[n]:
                     if ((len(prod), (n, "=", tuple(prod))) in C[i]):
-                        for f in follow(n, S, grammar, nonTerminals, set()):
+                        for f in grammarFollow[n]:
                             table[index][f] = prod
         closureSet = closure(goto(C[0], S, grammar, nonTerminals), grammar, nonTerminals, set())
         table["I_%d" % C.index(closureSet)]["EOF"] = ["Accepted"]

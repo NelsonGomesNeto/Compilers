@@ -77,8 +77,10 @@ def goto(state, symbol, grammar, nonTerminals):
         pointer, prod = production
         if (pointer == len(prod[2]) or prod[2][pointer] != symbol): continue
         newProduction = ((pointer + 1), (prod))
-        newState += closure([newProduction], grammar, nonTerminals, set())
-    else: return(newState)
+        closureSet = closure([newProduction], grammar, nonTerminals, set())
+        for prod in closureSet:
+            if (prod not in newState): newState += [prod]
+    return(newState)
 
 def getSymbols(closureSet):
     symbols = set()
