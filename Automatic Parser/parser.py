@@ -3,6 +3,7 @@ from Reading import *
 from AuxFunctions import *
 from TabularPredictive import TabularPredictive
 from RecursiveParser import RecursiveParser
+from SLRParser import SLRParser
 CODES = 0
 LEVEL = 0
 RAW = 0
@@ -82,8 +83,11 @@ tokenMap = readTokenMap()
 
 tabularPredictive = TabularPredictive(tokenMap)
 recursiveParser = RecursiveParser(tokenMap)
-# parsingTable = tabularPredictive.buildParsingTable(grammar, grammarFirst, grammarFollow, nonTerminals, terminals)
-# printParsingTable(parsingTable, terminals)
+slrParser = SLRParser(tokenMap)
+slrTable = slrParser.buildSLRTable(C, S, grammar, terminals, nonTerminals)
+printSLRTable(slrTable, terminals, nonTerminals)
+parsingTable = tabularPredictive.buildParsingTable(grammar, grammarFirst, grammarFollow, nonTerminals, terminals)
+printParsingTable(parsingTable, terminals)
 
 if (CODES):
     print()

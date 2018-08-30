@@ -71,10 +71,14 @@ def closure(productions, grammar, nonTerminals, visited):
                     clousureSet.update(closure([internProductionBlock], grammar, nonTerminals, visited))
     return(sorted(clousureSet))
 
-def goto(production, symbol, grammar, nonTerminals):
-    pointer, prod = production
-    if (pointer == len(prod[2]) or prod[2][pointer] != symbol): return(None)
-    else: return((pointer + 1, prod))
+def goto(state, symbol, grammar, nonTerminals):
+    newState = []
+    for production in state:
+        pointer, prod = production
+        if (pointer == len(prod[2]) or prod[2][pointer] != symbol): continue
+        newProduction = ((pointer + 1), (prod))
+        newState += closure([newProduction], grammar, nonTerminals, set())
+    else: return(newState)
 
 def getSymbols(closureSet):
     symbols = set()
@@ -86,7 +90,7 @@ def getSymbols(closureSet):
 def buildC(S, grammar, nonTerminals):
     C = []
     # print("closure({S' = . %s}) = " % S, end='')
-    C += [closure([(0, ("S'", "=", tuple(S)))], grammar, nonTerminals, set())]
+    C += [closure([(0, ("S'", "=", tuple([S])))], grammar, nonTerminals, set())]
     # printClosure(C[0])
     i = 0
     while (i < len(C)):
@@ -94,11 +98,7 @@ def buildC(S, grammar, nonTerminals):
         printClosure(C[i])
         symbols = getSymbols(C[i])
         for symbol in symbols:
-            newC = []
-            for production in C[i]:
-                calculatedGoto = goto(production, symbol, grammar, nonTerminals)
-                if (calculatedGoto is None): continue
-                newC += closure([calculatedGoto], grammar, nonTerminals, set())
-            if (newC not in C): C += [newC]
+            newState = goto(C[i], symbol, grammar, nonTerminals)
+            if (newState not in C): C += [newState]
         i += 1
     return(C)

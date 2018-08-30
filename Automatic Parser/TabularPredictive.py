@@ -8,7 +8,7 @@ class TabularPredictive:
 
     def findProductionOfTerminal(self, X, grammar, t, nonTerminals):
         for production in grammar[X]:
-            if (t in first(production, grammar, nonTerminals)):
+            if (t in first(production, grammar, nonTerminals, set())):
                 return(production)
 
     def buildParsingTable(self, grammar, grammarFirst, grammarFollow, nonTerminals, terminals):

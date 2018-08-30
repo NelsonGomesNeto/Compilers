@@ -36,13 +36,25 @@ def productionAsString(production):
 def printParsingTable(parsingTable, terminals):
     print("\nParsing Table:")
     print(end=" "*12)
-    for t in terminals: print("|%10s|" % t, end='')
+    for t in sorted(terminals): print("|%10s|" % t, end='')
     print("|%10s|" % "EOF")
-    for n in parsingTable:
+    for n in sorted(parsingTable):
         print("|%10s|" % n, end='')
-        for t in terminals:
+        for t in sorted(terminals):
             print("|%s%10s%s|" % productionAsString(parsingTable[n][t]), end='')
         print("|%s%10s%s|" % productionAsString(parsingTable[n]["EOF"]))
+
+def printSLRTable(SLRTable, terminals, nonTerminals):
+    print("\nSLR Table:")
+    print(end=" "*12)
+    column = terminals + ["EOF"] + nonTerminals
+    for c in column: print(("|%s%10s%s|" % (colors.yellow,c,colors.end)) if c == "EOF" else "|%10s|" % c, end='')
+    print()
+    for I in sorted(SLRTable, key=lambda x:int(x[2:])):
+        print("|%10s|" % I, end='')
+        for t in column:
+            print("|%s%10s%s|" % productionAsString(SLRTable[I][t]), end='')
+        print()
 
 def printClosureBox(closureBox):
     print(closureBox[1][0], closureBox[1][1], end='')
