@@ -75,7 +75,8 @@ def goto(state, symbol, grammar, nonTerminals):
     newState = []
     for production in state:
         pointer, prod = production
-        if (pointer == len(prod[2]) or prod[2][pointer] != symbol): continue
+        # print(prod)
+        if (pointer == len(prod[2]) or prod[2][pointer] != symbol or prod[2][0] == 'e'): continue
         newProduction = ((pointer + 1), (prod))
         closureSet = closure([newProduction], grammar, nonTerminals, set())
         for prod in closureSet:
@@ -101,6 +102,6 @@ def buildC(S, grammar, nonTerminals):
         symbols = getSymbols(C[i])
         for symbol in symbols:
             newState = goto(C[i], symbol, grammar, nonTerminals)
-            if (newState not in C): C += [newState]
+            if (newState not in C and newState): C += [newState]
         i += 1
     return(C)
