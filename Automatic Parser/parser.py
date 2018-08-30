@@ -4,12 +4,13 @@ from AuxFunctions import *
 from TabularPredictive import TabularPredictive
 from RecursiveParser import RecursiveParser
 from SLRParser import SLRParser
-CODES = 0
+CODES = 1
 LEVEL = 0
 RAW = 0
 AUX = 1
-TABULAR = 1
+TABULAR = 0
 RECURSIVE = 0
+SLR = 1
 REVERSED = 1
 
 def buildLevel(S, tree):
@@ -96,10 +97,11 @@ if (CODES):
     codes = readCodes()
     for code in codes:
         print("\nCode:", *code, "|", code)
-        tabTree, recTree, cp = [], [], -1
+        tabTree, recTree, slrTree, cp = [], [], [], -1
         try:
             if (TABULAR): cp = tabularPredictive.topDownTabularPredictive(parsingTable, S, code, nonTerminals, terminals, tabTree)
             if (RECURSIVE): cp = recursiveParser.topDownRecursive(S, grammar, code, 0, recTree, 1)
+            if (SLR): cp = slrParser.bottomUpSLRParser(slrTable, grammar, code)
         except Exception as e:
             print("BUG on parsers", e)
         print("\tVerdict: " + ((colors.green+"Accepted"+colors.end) if cp >= len(code) else (colors.red+"ERROR at token: %d" % (cp)+colors.end)))

@@ -58,6 +58,16 @@ def printSLRTable(SLRTable, terminals, nonTerminals):
             print("|%s%10s%s|" % productionAsString(SLRTable[I][t]), end='')
         print()
 
+def printSLRStackNode(node):
+    print("State: %d, Symbols: <" % int(node[0]), *node[1], end='> ')
+
+def printSLRStack(stack):
+    for s in stack:
+        print(end="| ")
+        printSLRStackNode(s)
+        print(end="| ")
+    print()
+
 def printClosureBox(closureBox):
     print(closureBox[1][0], closureBox[1][1], end='')
     for i, c in enumerate(closureBox[1][2]):
