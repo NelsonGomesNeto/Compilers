@@ -84,7 +84,7 @@ tokenMap = readTokenMap()
 
 tabularPredictive = TabularPredictive(tokenMap)
 parsingTable = tabularPredictive.buildParsingTable(grammar, grammarFirst, grammarFollow, nonTerminals, terminals)
-printParsingTable(parsingTable, terminals)
+printPredictiveParsingTable(parsingTable, terminals)
 
 recursiveParser = RecursiveParser(tokenMap)
 

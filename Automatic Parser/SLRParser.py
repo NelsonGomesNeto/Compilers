@@ -33,35 +33,35 @@ class SLRParser:
 
     def bottomUpSLRParser(self, slrTable, grammar, code):
         # stack has pair of [state, symbols]
-        stack, codePointer = [[0, [""]]], 0
+        stack, history, codePointer = [[0, ""]], [], 0
+        print("\tStack [State, Symbol]:")
         while (stack):
             printSLRStack(stack)
+            history += [stack]
             state, symbol = stack[len(stack) - 1]
-            print("line", state, symbol, classify(code[codePointer], self.tokenMap) if codePointer < len(code) else "")
+            if (VERBOSE): print("line", state, symbol, classify(code[codePointer], self.tokenMap) if codePointer < len(code) else "")
             action = slrTable["I_%d" % state][classify(code[codePointer], self.tokenMap) if codePointer < len(code) else "EOF"]
-            # print("action", action[0], action[0][0])
-            if (action[0] == "Error"):
-                print("Error LOL")
-                return(codePointer)
+            if (action[0] == "Error"): return(codePointer)
             if (action[0] == "Accepted"): return(codePointer)
             if (action[0][0] == 'e'):
-                symbol += [classify(code[codePointer], self.tokenMap)]
-                stack += [[int(action[0][1:]), symbol]]
+                stack += [[int(action[0][1:]), (classify(code[codePointer], self.tokenMap), code[codePointer])]]
                 codePointer += 1
             elif (action[0][0] == 'r'):
                 n, prevSymbol = action[1], symbol
-                production = grammar[n][int(action[0][1:])].copy()
-                production.reverse()
-                toSubstitute, rest, done = [], [], False
-                for i in range(len(symbol) - 1, -1, -1):
-                    if (not done):
-                        toSubstitute += [symbol[i]]
-                        stack.pop(len(stack) - 1)
-                    else: rest += [symbol[i]]
-                    if (toSubstitute == production): done = True
-                rest.reverse()
-                rest += [n]
+                production = grammar[n][int(action[0][1:])]
+                for i in range(len(production)):
+                    stack.pop(len(stack) - 1)
                 state, symbol = stack[len(stack) - 1]
+                symbol = n
                 transition = int(slrTable["I_%d" % state][n][0])
                 # print("tosub", production, toSubstitute, production == toSubstitute, prevSymbol, rest)
-                stack += [[transition, rest]]
+                stack += [[transition, symbol]]
+        # production.reverse()
+        # toSubstitute, rest, done = [], [], False
+        # for i in range(len(symbol) - 1, -1, -1):
+        #     if (not done):
+        #         toSubstitute += [symbol[i]]
+        #         stack.pop(len(stack) - 1)
+        #     else: rest += [symbol[i]]
+        #     if (toSubstitute == production): done = True
+        # rest.reverse()

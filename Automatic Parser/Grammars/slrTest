@@ -5,7 +5,8 @@ T = T '*' F | F
 F = '(' E ')' | 'id'
 END
 tokenMap:
+12345789 #= id
 END
 Codes:
-[a;a]
+1+2*3
 END

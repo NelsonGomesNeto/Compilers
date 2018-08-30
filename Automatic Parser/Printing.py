@@ -33,8 +33,8 @@ def productionAsString(production):
         s[1] += str(p)
     return(tuple(s))
 
-def printParsingTable(parsingTable, terminals):
-    print("\nParsing Table:")
+def printPredictiveParsingTable(parsingTable, terminals):
+    print("\nPredictive Parsing Table:")
     print(end=" "*12)
     for t in sorted(terminals): print("|%10s|" % t, end='')
     print("|%10s|" % "EOF")
@@ -58,15 +58,18 @@ def printSLRTable(SLRTable, terminals, nonTerminals):
             print("|%s%10s%s|" % productionAsString(SLRTable[I][t]), end='')
         print()
 
-def printSLRStackNode(node):
-    print("State: %d, Symbols: <" % int(node[0]), *node[1], end='> ')
-
 def printSLRStack(stack):
-    for s in stack:
-        print(end="| ")
-        printSLRStackNode(s)
-        print(end="| ")
-    print()
+    states, symbols, all = "", "", ""
+    for i, s in enumerate(stack):
+        if (i):
+            states += " "
+            symbols += " "
+            all += " "
+        states += str(s[0])
+        symbols += str(s[1])
+        all += "[" + colors.yellow + str(s[0]) + colors.end + ", " + (colors.blue if (isinstance(s[1], str)) else colors.green) + str(s[1]) + colors.end + "]"
+    # print("\t%-30s | %-30s" % (states, symbols))
+    print("\t", all, sep='')
 
 def printClosureBox(closureBox):
     print(closureBox[1][0], closureBox[1][1], end='')
