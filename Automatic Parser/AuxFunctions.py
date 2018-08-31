@@ -103,5 +103,8 @@ def buildC(S, grammar, nonTerminals):
         for symbol in symbols:
             newState = goto(C[i], symbol, grammar, nonTerminals)
             if (newState not in C and newState): C += [newState]
+            elif (newState):
+                print(end="\tI_%d (X) = " % C.index(newState))
+                printClosure(newState)
         i += 1
     return(C)

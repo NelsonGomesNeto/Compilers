@@ -1,0 +1,12 @@
+Start: LI
+Productions:
+LI = LI ',' ID | ID
+ID = 'id' | 'id' '-' 'cteN'
+END
+tokenMap:
+abc #= id
+1234567890 #= cteN
+END
+Codes:
+a, b, c - 5
+END

@@ -18,7 +18,7 @@ def readER():
             for i in range(len(p)):
                 if (p[i] not in er and p[i] != 'e'):
                     er[e][j][i] = p[i][1:len(p[i])-1]
-                    terminals += [er[e][j][i]]
+                    if (er[e][j][i] not in terminals): terminals += [er[e][j][i]]
     return(er, nonTerminals, terminals)
 
 def readCodes():

@@ -1,5 +1,5 @@
 from AuxFunctions import *
-VERBOSE = 0
+VERBOSE = 1
 
 class TabularPredictive:
     tokenMap = {}

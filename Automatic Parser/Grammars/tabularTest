@@ -1,0 +1,14 @@
+Start: E
+Productions:
+E = T Er
+Er = 'v' T Er | e
+T = F Tr
+Tr = '^' F Tr | e
+F = '¬' F | 'id'
+END
+tokenMap:
+123456789 #= id
+END
+Codes:
+1 ^ 2 v 3
+END
