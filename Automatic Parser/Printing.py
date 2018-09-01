@@ -24,38 +24,39 @@ def printAuxFunction(name, grammarSet, nonTerminals):
     for n in nonTerminals:
         print("\t%s(%s) =" % (name, n), grammarSet[n])
 
-def productionAsString(production):
-    s = [colors.green, "", colors.end]
+def productionAsString(production, terminals):
+    s = [colors.blue, "", colors.end]
     if (production == ["Error"]): s[0] = colors.red
     if (production == ['e']): s[0] = colors.yellow
+    if (production == ["Accepted"]): s[0] = colors.green
     for i, p in enumerate(production):
         if (i): s[1] += " "
-        s[1] += str(p)
+        s[1] += str(p) if (p not in terminals) else '\''+str(p)+'\''
     return(tuple(s))
 
 def printPredictiveParsingTable(parsingTable, terminals):
     print("\nPredictive Parsing Table:")
-    print(end=" "*12)
-    for t in sorted(terminals): print("|%10s|" % t, end='')
-    print("|%10s|" % "EOF")
+    print(end=" "*16)
+    for t in sorted(terminals): print("|%14s|" % t, end='')
+    print("|%14s|" % "EOF")
     for n in sorted(parsingTable):
-        print("|%10s|" % n, end='')
+        print("|%14s|" % n, end='')
         for t in sorted(terminals):
-            print("|%s%10s%s|" % productionAsString(parsingTable[n][t]), end='')
-        print("|%s%10s%s|" % productionAsString(parsingTable[n]["EOF"]))
+            print("|%s%14s%s|" % productionAsString(parsingTable[n][t], terminals), end='')
+        print("|%s%14s%s|" % productionAsString(parsingTable[n]["EOF"], terminals))
 
 def printSLRTable(SLRTable, terminals, nonTerminals):
     print("\nSLR Table:")
-    print(end=" "*12)
+    print(end=" "*8)
     lol = sorted(terminals)
     lol.reverse()
     column = lol + ["EOF"] + nonTerminals
     for c in column: print(("|%s%10s%s|" % (colors.yellow,c,colors.end)) if c == "EOF" else "|%10s|" % c, end='')
     print()
     for I in sorted(SLRTable, key=lambda x:int(x[2:])):
-        print("|%10s|" % I, end='')
+        print("|%6s|" % I, end='')
         for t in column:
-            print("|%s%10s%s|" % productionAsString(SLRTable[I][t]), end='')
+            print("|%s%10s%s|" % productionAsString(SLRTable[I][t], terminals), end='')
         print()
 
 def printSLRStack(stack):
@@ -67,22 +68,23 @@ def printSLRStack(stack):
             all += " "
         states += str(s[0])
         symbols += str(s[1])
-        all += "[" + colors.yellow + str(s[0]) + colors.end + ", " + (colors.blue if (isinstance(s[1], str)) else colors.green) + str(s[1]) + colors.end + "]"
+        st, sy = colors.yellow + str(s[0]) + colors.end, (colors.blue if (isinstance(s[1], str)) else colors.green) + str(s[1]) + colors.end
+        all += "[" + sy + ", " + st + "]"
     # print("\t%-30s | %-30s" % (states, symbols))
     print("\t", all, sep='')
 
-def printClosureBox(closureBox):
-    print(closureBox[1][0], closureBox[1][1], end='')
+def printClosureBox(closureBox, nonTerminals):
+    print(colors.blue, closureBox[1][0], " ", colors.yellow, closureBox[1][1], colors.end, sep='', end='')
     for i, c in enumerate(closureBox[1][2]):
         if (i == closureBox[0]): print(end=colors.red+' .'+colors.end)
-        print(end=' ' + colors.green+c+colors.end)
+        print(end=' ' + (colors.blue+c if c in nonTerminals else colors.green+'\''+c+'\'') + colors.end)
     if (closureBox[0] == len(closureBox[1][2])): print(end=colors.red+' .'+colors.end)
 
-def printClosure(closureSet):
+def printClosure(closureSet, nonTerminals):
     print(end='{')
     for i, cl in enumerate(closureSet):
         if (i): print(end=', ')
-        printClosureBox(cl)
+        printClosureBox(cl, nonTerminals)
     print(end='}\n')
 
 def printLevel(level):

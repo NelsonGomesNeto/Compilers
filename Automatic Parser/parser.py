@@ -8,9 +8,9 @@ CODES = 1
 LEVEL = 0
 RAW = 0
 AUX = 1
-TABULAR = 0
-RECURSIVE = 0
-SLR = 1
+TABULAR = 1
+RECURSIVE = 1
+SLR = 0
 REVERSED = 1
 
 def buildLevel(S, tree):
@@ -76,27 +76,30 @@ if (AUX):
     print()
     printAuxFunction("Follow", grammarFollow, nonTerminals)
 
-print("\nClosure:")
-C = buildC(S, grammar, nonTerminals)
+if (SLR):
+    print("\nClosure:")
+    C = buildC(S, grammar, nonTerminals)
 
 print()
 tokenMap = readTokenMap()
 
-tabularPredictive = TabularPredictive(tokenMap)
-parsingTable = tabularPredictive.buildParsingTable(grammar, grammarFirst, grammarFollow, nonTerminals, terminals)
-printPredictiveParsingTable(parsingTable, terminals)
+if (TABULAR):
+    tabularPredictive = TabularPredictive(tokenMap)
+    parsingTable = tabularPredictive.buildParsingTable(grammar, grammarFirst, grammarFollow, nonTerminals, terminals)
+    printPredictiveParsingTable(parsingTable, terminals)
 
-recursiveParser = RecursiveParser(tokenMap)
+if (RECURSIVE): recursiveParser = RecursiveParser(tokenMap)
 
-slrParser = SLRParser(tokenMap)
-slrTable = slrParser.buildSLRTable(C, S, grammar, terminals, nonTerminals, grammarFollow)
-printSLRTable(slrTable, terminals, nonTerminals)
+if (SLR):
+    slrParser = SLRParser(tokenMap)
+    slrTable = slrParser.buildSLRTable(C, S, grammar, terminals, nonTerminals, grammarFollow)
+    printSLRTable(slrTable, terminals, nonTerminals)
 
 if (CODES):
     print()
     codes = readCodes()
     for code in codes:
-        print("\nCode:", *code, "|", code)
+        print("\nCode:", *code, "| tokens:", code)
         tabTree, recTree, slrTree, cp = [], [], [], -1
         try:
             if (TABULAR): cp = tabularPredictive.topDownTabularPredictive(parsingTable, S, code, nonTerminals, terminals, tabTree)
