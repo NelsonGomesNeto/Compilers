@@ -30,7 +30,7 @@ def first(production, grammar, nonTerminals, visited):
         if (hasEpi >= len(production)): firstSet.add('e')
     return(firstSet)
 
-def follow(X, S, grammar, nonTerminals, visited):
+def follow(X, S, grammar, nonTerminals, visited, grammarFollow):
     followSet = set()
     if (X == S): followSet.add("EOF")
     for A in nonTerminals:
@@ -50,7 +50,7 @@ def follow(X, S, grammar, nonTerminals, visited):
                     if (X == A): continue
                     if (A not in visited):
                         visited.add(A)
-                        followSet.update(follow(A, S, grammar, nonTerminals, visited))
+                        followSet.update(grammarFollow[A] if A in grammarFollow else follow(A, S, grammar, nonTerminals, visited, grammarFollow))
     if ('e' in followSet): followSet.remove('e')
     return(followSet)
 
@@ -75,7 +75,6 @@ def goto(state, symbol, grammar, nonTerminals):
     newState = []
     for production in state:
         pointer, prod = production
-        # print(prod)
         if (pointer == len(prod[2]) or prod[2][pointer] != symbol or prod[2][0] == 'e'): continue
         newProduction = ((pointer + 1), (prod))
         closureSet = closure([newProduction], grammar, nonTerminals, set())
@@ -90,21 +89,23 @@ def getSymbols(closureSet):
         if (pointer < len(prod[2])): symbols.add(prod[2][pointer])
     return(symbols)
 
-def buildC(S, grammar, nonTerminals):
-    C = []
-    # print("closure({S' = . %s}) = " % S, end='')
+def buildC(S, grammar, terminals, nonTerminals):
+    statesList, C = {}, []
     C += [closure([(0, ("S'", "=", tuple([S])))], grammar, nonTerminals, set())]
-    # printClosure(C[0])
+    print(end="\t%s = closure({%s = %s}) = " % (stateString(0), symbolString("S'", terminals), symbolString(S, terminals)))
+    printClosure(C[0], nonTerminals)
     i = 0
     while (i < len(C)):
-        print(end="\tI_%d = " % i)
-        printClosure(C[i], nonTerminals)
         symbols = getSymbols(C[i])
         for symbol in symbols:
-            newState = goto(C[i], symbol, grammar, nonTerminals)
-            if (newState not in C and newState): C += [newState]
-            elif (newState):
-                print(end="\tI_%d (X) = " % C.index(newState))
-                printClosure(newState, nonTerminals)
+            newState, isIn = goto(C[i], symbol, grammar, nonTerminals), 1
+            if (not newState): continue
+            if (newState not in C):
+                C += [newState]
+                isIn = 0
+            print(end="\t%s%s" % (stateString(C.index(newState)), " (X) " if isIn else " "))
+            statesList[(i, symbol)] = C.index(newState)
+            print(end="= goto(%s, %s) = " % (stateString(i), symbolString(symbol, terminals)))
+            printClosure(newState, nonTerminals)
         i += 1
-    return(C)
+    return(statesList, C)

@@ -1,7 +1,11 @@
+from Printing import colors
 separator = "{}()[]+-*/,^;"
 
+def reading():
+    print("Reading: ", colors.yellow+input()+colors.end, sep='')
+
 def readER():
-    print("Reading:", input())
+    reading()
     er, nonTerminals, terminals = {}, [], []
     while (True):
         line = input()
@@ -22,7 +26,7 @@ def readER():
     return(er, nonTerminals, terminals)
 
 def readCodes():
-    print("Reading:", input())
+    reading()
     codes = []
     while (True):
         line = input()
@@ -33,7 +37,7 @@ def readCodes():
     return(codes)
 
 def readTokenMap():
-    print("Reading:", input())
+    reading()
     tokenMap = {}
     while (True):
         line = input()

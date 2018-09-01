@@ -19,10 +19,16 @@ def printER(er, nonTerminals = None):
             print(*production, end='')
         print()
 
-def printAuxFunction(name, grammarSet, nonTerminals):
-    print(name)
+def stateString(i):
+    return(colors.yellow+("I_%d" % i)+colors.end)
+
+def symbolString(symbol, terminals):
+    return((colors.green if symbol in terminals else colors.blue) + symbol + colors.end)
+
+def printAuxFunction(name, grammarSet, terminals, nonTerminals):
+    print("\n"+colors.yellow+name+colors.end)
     for n in nonTerminals:
-        print("\t%s(%s) =" % (name, n), grammarSet[n])
+        print("\t%s(%s) =" % (name, symbolString(n, terminals)), grammarSet[n])
 
 def productionAsString(production, terminals):
     s = [colors.blue, "", colors.end]
@@ -35,7 +41,7 @@ def productionAsString(production, terminals):
     return(tuple(s))
 
 def printPredictiveParsingTable(parsingTable, terminals):
-    print("\nPredictive Parsing Table:")
+    print("\n"+colors.yellow+"Predictive Parsing Table:"+colors.end)
     print(end=" "*16)
     for t in sorted(terminals): print("|%14s|" % t, end='')
     print("|%14s|" % "EOF")
@@ -46,7 +52,7 @@ def printPredictiveParsingTable(parsingTable, terminals):
         print("|%s%14s%s|" % productionAsString(parsingTable[n]["EOF"], terminals))
 
 def printSLRTable(SLRTable, terminals, nonTerminals):
-    print("\nSLR Table:")
+    print("\n"+colors.yellow+"SLR Table:"+colors.end)
     print(end=" "*8)
     lol = sorted(terminals)
     lol.reverse()
@@ -54,10 +60,14 @@ def printSLRTable(SLRTable, terminals, nonTerminals):
     for c in column: print(("|%s%10s%s|" % (colors.yellow,c,colors.end)) if c == "EOF" else "|%10s|" % c, end='')
     print()
     for I in sorted(SLRTable, key=lambda x:int(x[2:])):
-        print("|%6s|" % I, end='')
+        print("|%s%6s%s|" % (colors.yellow,I,colors.end), end='')
         for t in column:
             print("|%s%10s%s|" % productionAsString(SLRTable[I][t], terminals), end='')
         print()
+
+def stackItem(item):
+    if (isinstance(item, str)): return(colors.blue+str(item)+colors.end)
+    return(colors.green+"("+str(item[0])+", \'"+str(item[1])+'\''+")"+colors.end)
 
 def printSLRStack(stack):
     states, symbols, all = "", "", ""
@@ -68,7 +78,7 @@ def printSLRStack(stack):
             all += " "
         states += str(s[0])
         symbols += str(s[1])
-        st, sy = colors.yellow + str(s[0]) + colors.end, (colors.blue if (isinstance(s[1], str)) else colors.green) + str(s[1]) + colors.end
+        st, sy = colors.yellow + str(s[0]) + colors.end, stackItem(s[1])
         all += "[" + sy + ", " + st + "]"
     # print("\t%-30s | %-30s" % (states, symbols))
     print("\t", all, sep='')
@@ -77,7 +87,7 @@ def printClosureBox(closureBox, nonTerminals):
     print(colors.blue, closureBox[1][0], " ", colors.yellow, closureBox[1][1], colors.end, sep='', end='')
     for i, c in enumerate(closureBox[1][2]):
         if (i == closureBox[0]): print(end=colors.red+' .'+colors.end)
-        print(end=' ' + (colors.blue+c if c in nonTerminals else colors.green+'\''+c+'\'') + colors.end)
+        print(end=' ' + (colors.blue+c if c in nonTerminals else colors.green+c) + colors.end)
     if (closureBox[0] == len(closureBox[1][2])): print(end=colors.red+' .'+colors.end)
 
 def printClosure(closureSet, nonTerminals):
