@@ -11,24 +11,24 @@ class effect: # Doesn't seem to work .-.
     bold = "\033[1m"
     end = "\033[21m"
 
-def printER(er, nonTerminals = None):
-    for rule in (nonTerminals if nonTerminals is not None else er):
-        print("\t", rule, " = ", sep='', end='')
-        for i, production in enumerate(er[rule]):
+def printGrammar(grammar, terminals, nonTerminals = None):
+    for n in (nonTerminals if nonTerminals is not None else grammar):
+        print("\t", colors.blue, n, colors.end, " = ", sep='', end='')
+        for i, production in enumerate(grammar[n]):
             if (i): print(" | ", end='')
-            print(*production, end='')
+            print(*[symbolString(s, terminals) for s in production], end='')
         print()
 
 def stateString(i):
     return(colors.yellow+("I_%d" % i)+colors.end)
 
 def symbolString(symbol, terminals):
-    return((colors.green if symbol in terminals else colors.blue) + symbol + colors.end)
+    return((colors.green if symbol in terminals else colors.blue if (symbol != 'e' and symbol != "EOF") else colors.yellow) + symbol + colors.end)
 
 def printAuxFunction(name, grammarSet, terminals, nonTerminals):
     print("\n"+colors.yellow+name+colors.end)
     for n in nonTerminals:
-        print("\t%s(%s) =" % (name, symbolString(n, terminals)), grammarSet[n])
+        print("\t%s(%s) = {" % (name, symbolString(n, terminals)), ', '.join([symbolString(s, terminals) for s in grammarSet[n]]), "}", sep='')
 
 def productionAsString(production, terminals):
     s = [colors.blue, "", colors.end]
@@ -117,7 +117,7 @@ def printGraph(graph):
         print()
 
 def tokenBox(S, nonTerminals):
-    return("[%10s]" % ((colors.yellow*COLORED if S[3] == 'e' else "")+S[3]+(colors.end*COLORED if S[3] == 'e' else "") if (S[3] == 'e' or S[3] in nonTerminals) else (colors.green*COLORED+str(S[3][0])+", "+str(S[3][1])+colors.end*COLORED)))
+    return("[%10s]" % ((colors.yellow*COLORED if S[3] == 'e' else "")+S[3]+(colors.end*COLORED if S[3] == 'e' else "") if (S[3] == 'e' or S[3] in nonTerminals) else (colors.green*COLORED+str(S[3][0])+", \'"+str(S[3][1])+'\''+colors.end*COLORED)))
 
 def preOrderGraph(S, nonTerminals, graph):
     print(S[0]*13*" ", tokenBox(S, nonTerminals), sep='')

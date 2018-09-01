@@ -8,9 +8,9 @@ CODES = 1
 LEVEL = 0
 RAW = 0
 AUX = 1
-TABULAR = 0
-RECURSIVE = 0
-SLR = 1
+TABULAR = 1
+RECURSIVE = 1
+SLR = 0
 REVERSED = 1
 
 def buildLevel(S, tree):
@@ -65,7 +65,7 @@ def spacing(S, graph, grammar, nonTerminals, space):
 
 S = input().split()[1]
 grammar, nonTerminals, terminals = readER()
-printER(grammar, nonTerminals)
+printGrammar(grammar, terminals, nonTerminals)
 if (AUX):
     grammarFirst, grammarFollow = {}, {}
     for n in nonTerminals:
@@ -97,7 +97,7 @@ if (CODES):
     print()
     codes = readCodes()
     for code in codes:
-        print("\n"+colors.yellow+"Code:"+colors.end, *code, "| tokens:", code)
+        print("\n"+colors.yellow+"Code: ",colors.blue, *code, colors.end, " | tokens: ", code, sep='')
         tabTree, recTree, slrTree, cp = [], [], [], -1
         try:
             if (TABULAR): cp = tabularPredictive.topDownTabularPredictive(parsingTable, S, code, nonTerminals, terminals, tabTree)

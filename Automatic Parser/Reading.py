@@ -6,24 +6,24 @@ def reading():
 
 def readER():
     reading()
-    er, nonTerminals, terminals = {}, [], []
+    grammar, nonTerminals, terminals = {}, [], []
     while (True):
         line = input()
         if (line == "END"): break
         left, right = line.split('=')
         left = left.strip(' ')
-        er[left] = []
+        grammar[left] = []
         nonTerminals += [left]
         for production in right.split('|'):
             production = production.split()
-            er[left] += [production]
-    for e in er:
-        for j, p in enumerate(er[e]):
+            grammar[left] += [production]
+    for e in grammar:
+        for j, p in enumerate(grammar[e]):
             for i in range(len(p)):
-                if (p[i] not in er and p[i] != 'e'):
-                    er[e][j][i] = p[i][1:len(p[i])-1]
-                    if (er[e][j][i] not in terminals): terminals += [er[e][j][i]]
-    return(er, nonTerminals, terminals)
+                if (p[i] not in grammar and p[i] != 'e'):
+                    grammar[e][j][i] = p[i][1:len(p[i])-1]
+                    if (grammar[e][j][i] not in terminals): terminals += [grammar[e][j][i]]
+    return(grammar, nonTerminals, terminals)
 
 def readCodes():
     reading()
