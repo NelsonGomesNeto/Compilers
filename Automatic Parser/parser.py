@@ -8,9 +8,9 @@ CODES = 1
 LEVEL = 0
 RAW = 0
 AUX = 1
-TABULAR = 1
-RECURSIVE = 1
-SLR = 0
+TABULAR = 0
+RECURSIVE = 0
+SLR = 1
 REVERSED = 1
 
 def buildLevel(S, tree):
@@ -102,7 +102,7 @@ if (CODES):
         try:
             if (TABULAR): cp = tabularPredictive.topDownTabularPredictive(parsingTable, S, code, nonTerminals, terminals, tabTree)
             if (RECURSIVE): cp = recursiveParser.topDownRecursive(S, grammar, code, 0, recTree, 1)
-            if (SLR): cp = slrParser.bottomUpSLRParser(slrTable, grammar, code)
+            if (SLR): cp = slrParser.bottomUpSLRParser(slrTable, grammar, code, slrTree)
         except Exception as e:
             print("BUG on parsers", e)
         print("\tVerdict: " + ((colors.green+"Accepted"+colors.end) if cp >= len(code) else (colors.red+"ERROR at token: %d" % (cp)+colors.end)))
@@ -124,6 +124,13 @@ if (CODES):
                 recLevel = buildLevel(S, recTree)
                 level = recLevel
                 if (LEVEL): printLevel(recLevel)
+            if (SLR):
+                slrTree = slrParser.transformTree(slrTree, S, nonTerminals)
+                slrTree.sort(key=lambda x:x[0])
+                if (RAW): print("\tslrRawTree:", slrTree)
+                slrLevel = buildLevel(S, slrTree)
+                level = slrLevel
+                if (LEVEL): printLevel(slrLevel)
             if (TABULAR and RECURSIVE): print("\tTree Equality: " + ((colors.green+"True") if tabTree == recTree else (colors.red+"False")) + colors.end)
             graph = buildGraph(grammar, level)
             # # printGraph(graph)
