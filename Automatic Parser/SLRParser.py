@@ -81,6 +81,7 @@ class SLRParser:
                 self.fillNewTree(tree, newTree, nonTerminals, depth + 1, i)
 
     def transformTree(self, tree, S, nonTerminals):
+        if (not tree): return([[1, ['e']]])
         tree.reverse()
         newTree, i = [], [0]
         self.fillNewTree(tree, newTree, nonTerminals, 1, i)
