@@ -22,17 +22,17 @@ class SLRParser:
         eofTerminals = terminals + ["EOF"]
         table = self.initTable(len(C), eofTerminals, nonTerminals)
 
-        # S' = S . rule
-        closureSet = closure(goto(C[0], S, grammar, nonTerminals), grammar, nonTerminals, set())
+        # RULE: S' = S .
+        closureSet = C[statesList[(0, S)]]
         table["I_%d" % C.index(closureSet)]["EOF"] = ["Accepted"]
         if (['e'] in grammar[S]): table["I_0"]["EOF"] = ["Accepted"]
 
-        # goto(state, symbol) rule
+        # RULE: goto(state, symbol) [symbol = terminals U nonTErminals]
         for state, symbol in sorted(statesList):
             index = "I_%d" % state
             table[index][symbol] = [("e" if symbol in terminals else "") + str(statesList[(state, symbol)])]
 
-        # A = alpha . rule
+        # RULE: A = alpha .
         for i in range(len(C)):
             index = "I_%d" % i
             for dot, production in C[i]:

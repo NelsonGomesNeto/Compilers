@@ -55,45 +55,43 @@ def follow(X, S, grammar, nonTerminals, visited, grammarFollow):
     return(followSet)
 
 # each productionBlock in productions will be a pair: (pointer, (X, =, production))
-def closure(productions, grammar, nonTerminals, visited):
+def closure(productionBlock, grammar, nonTerminals, visited):
     clousureSet = set()
-    if (tuple(productions) in visited): return(clousureSet)
-    visited.add(tuple(productions))
-    for p in productions:
-        clousureSet.add(p)
-    for productionBlock in productions:
-        pointer, production = productionBlock
-        production = production[2]
-        if (pointer < len(production) and production[pointer] in nonTerminals):
-            for internProduction in grammar[production[pointer]]:
-                internProductionBlock = (0, (production[pointer], "=", tuple(internProduction)))
-                if (internProductionBlock not in clousureSet):
-                    clousureSet.update(closure([internProductionBlock], grammar, nonTerminals, visited))
+    if (tuple(productionBlock) in visited): return(clousureSet)
+    visited.add(tuple(productionBlock))
+
+    clousureSet.add(productionBlock)
+    pointer, production = productionBlock
+    production = production[2]
+    if (pointer < len(production) and production[pointer] in nonTerminals):
+        for internProduction in grammar[production[pointer]]:
+            internProductionBlock = (0, (production[pointer], "=", tuple(internProduction)))
+            clousureSet.update(closure(internProductionBlock, grammar, nonTerminals, visited))
     return(sorted(clousureSet))
 
 def goto(state, symbol, grammar, nonTerminals):
     newState = []
-    for production in state:
-        pointer, prod = production
-        if (pointer == len(prod[2]) or prod[2][pointer] != symbol or prod[2][0] == 'e'): continue
-        newProduction = ((pointer + 1), (prod))
-        closureSet = closure([newProduction], grammar, nonTerminals, set())
+    for productionBlock in state:
+        pointer, prod = productionBlock
+        if (pointer >= len(prod[2]) or prod[2][pointer] != symbol or prod[2][0] == 'e'): continue
+        newProductionBlock = ((pointer + 1), (prod))
+        closureSet = closure(newProductionBlock, grammar, nonTerminals, set())
         for prod in closureSet:
             if (prod not in newState): newState += [prod]
     return(newState)
 
 def getSymbols(closureSet):
     symbols = set()
-    for cl in closureSet:
-        pointer, prod = cl
+    for productionBlock in closureSet:
+        pointer, prod = productionBlock
         if (pointer < len(prod[2])): symbols.add(prod[2][pointer])
     return(symbols)
 
 def buildC(S, grammar, terminals, nonTerminals):
     statesList, C = {}, []
-    C += [closure([(0, ("S'", "=", tuple([S])))], grammar, nonTerminals, set())]
+    C += [closure((0, ("S'", "=", tuple([S]))), grammar, nonTerminals, set())]
     print(end="\t%s = closure({%s = %s}) = " % (stateString(0), symbolString("S'", terminals), symbolString(S, terminals)))
-    printClosure(C[0], nonTerminals)
+    printClosure(C[0], nonTerminals + ["S'"])
     i = 0
     while (i < len(C)):
         symbols = getSymbols(C[i])
