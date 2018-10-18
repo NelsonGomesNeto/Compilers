@@ -1,0 +1,12 @@
+Start: Ea
+Productions:
+Ea = Ea '+' Ta | Ea '-' Ta | Ta
+Ta = Ta '*' Fa | Fa
+Fa = 'int' | '(' Ea ')'
+END
+tokenMap:
+0123456789 #= int
+END
+Codes:
+1+1
+END

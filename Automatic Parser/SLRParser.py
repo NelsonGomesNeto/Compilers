@@ -18,24 +18,24 @@ class SLRParser:
                 table[index][n] = ["Error"]
         return(table)
 
-    def buildSLRTable(self, statesList, C, S, grammar, terminals, nonTerminals, grammarFollow):
+    def buildSLRTable(self, statesList, closure, S, grammar, terminals, nonTerminals, grammarFollow):
         eofTerminals = terminals + ["EOF"]
-        table = self.initTable(len(C), eofTerminals, nonTerminals)
+        table = self.initTable(len(closure), eofTerminals, nonTerminals)
 
         # RULE: S' = S .
-        closureSet = C[statesList[(0, S)]]
-        table["I_%d" % C.index(closureSet)]["EOF"] = ["Accepted"]
+        closureSet = closure[statesList[(0, S)]]
+        table["I_%d" % closure.index(closureSet)]["EOF"] = ["Accepted"]
         if (['e'] in grammar[S]): table["I_0"]["EOF"] = ["Accepted"]
 
-        # RULE: goto(state, symbol) [symbol = terminals U nonTErminals]
+        # RULE: goto(state, symbol) [symbol = terminals U nonTerminals]
         for state, symbol in sorted(statesList):
             index = "I_%d" % state
             table[index][symbol] = [("e" if symbol in terminals else "") + str(statesList[(state, symbol)])]
 
         # RULE: A = alpha .
-        for i in range(len(C)):
+        for i in range(len(closure)):
             index = "I_%d" % i
-            for dot, production in C[i]:
+            for dot, production in closure[i]:
                 n, production = production[0], production[2]
                 if (n == "S'"): continue
                 if (dot == len(production)):

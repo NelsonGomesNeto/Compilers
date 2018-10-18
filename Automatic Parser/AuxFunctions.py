@@ -89,7 +89,7 @@ def getSymbols(closureSet):
 
 def buildCanonical(S, grammar, terminals, nonTerminals):
     statesList, canonical = {}, []
-    canonical += [closure((0, ("S'", "=", ((S)) )), grammar, nonTerminals, set())]
+    canonical += [closure((0, ("S'", "=", tuple([S]) )), grammar, nonTerminals, set())]
     print(end="\t%s = closure({%s = %s}) = " % (stateString(0), symbolString("S'", terminals), symbolString(S, terminals)))
     printClosure(canonical[0], nonTerminals + ["S'"])
     i = 0
