@@ -9,7 +9,7 @@ class colors:
 
 class effect: # Doesn't seem to work .-.
     bold = "\033[1m"
-    end = "\033[21m"
+    end = "\033[0m"
 
 def printGrammar(grammar, terminals, nonTerminals = None):
     for n in (nonTerminals if nonTerminals is not None else grammar):

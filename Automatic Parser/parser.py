@@ -76,7 +76,7 @@ if (AUX):
 
 if (SLR):
     print("\n"+colors.yellow+"Closure:"+colors.end)
-    statesList, C = buildC(S, grammar, terminals, nonTerminals)
+    statesList, Canonical = buildCanonical(S, grammar, terminals, nonTerminals)
 
 print()
 tokenMap = readTokenMap()
@@ -90,7 +90,7 @@ if (RECURSIVE): recursiveParser = RecursiveParser(tokenMap)
 
 if (SLR):
     slrParser = SLRParser(tokenMap)
-    slrTable = slrParser.buildSLRTable(statesList, C, S, grammar, terminals, nonTerminals, grammarFollow)
+    slrTable = slrParser.buildSLRTable(statesList, Canonical, S, grammar, terminals, nonTerminals, grammarFollow)
     printSLRTable(slrTable, terminals, nonTerminals)
 
 if (CODES):

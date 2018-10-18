@@ -87,23 +87,23 @@ def getSymbols(closureSet):
         if (pointer < len(prod[2])): symbols.add(prod[2][pointer])
     return(symbols)
 
-def buildC(S, grammar, terminals, nonTerminals):
-    statesList, C = {}, []
-    C += [closure((0, ("S'", "=", tuple([S]))), grammar, nonTerminals, set())]
+def buildCanonical(S, grammar, terminals, nonTerminals):
+    statesList, canonical = {}, []
+    canonical += [closure((0, ("S'", "=", ((S)) )), grammar, nonTerminals, set())]
     print(end="\t%s = closure({%s = %s}) = " % (stateString(0), symbolString("S'", terminals), symbolString(S, terminals)))
-    printClosure(C[0], nonTerminals + ["S'"])
+    printClosure(canonical[0], nonTerminals + ["S'"])
     i = 0
-    while (i < len(C)):
-        symbols = getSymbols(C[i])
+    while (i < len(canonical)):
+        symbols = getSymbols(canonical[i])
         for symbol in symbols:
-            newState, isIn = goto(C[i], symbol, grammar, nonTerminals), 1
+            newState, isIn = goto(canonical[i], symbol, grammar, nonTerminals), 1
             if (not newState): continue
-            if (newState not in C):
-                C += [newState]
+            if (newState not in canonical):
+                canonical += [newState]
                 isIn = 0
-            print(end="\t%s%s" % (stateString(C.index(newState)), " (X) " if isIn else " "))
-            statesList[(i, symbol)] = C.index(newState)
+            print(end="\t%s%s" % (stateString(canonical.index(newState)), " (X) " if isIn else " "))
+            statesList[(i, symbol)] = canonical.index(newState)
             print(end="= goto(%s, %s) = " % (stateString(i), symbolString(symbol, terminals)))
             printClosure(newState, nonTerminals)
         i += 1
-    return(statesList, C)
+    return(statesList, canonical)
