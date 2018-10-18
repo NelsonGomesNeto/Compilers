@@ -1,11 +1,14 @@
 Start: Ea
 Productions:
-Ea = Ea '+' Ta | Ea '-' Ta | Ta
-Ta = Ta '*' Fa | Fa
+Ea = Ea 'plus' Ta | Ea 'minus' Ta | Ta
+Ta = Ta 'mult' Fa | Fa
 Fa = 'int' | '(' Ea ')'
 END
 tokenMap:
 0123456789 #= int
++ #= plus
+- #= minus
+* #= mult
 END
 Codes:
 1+1
