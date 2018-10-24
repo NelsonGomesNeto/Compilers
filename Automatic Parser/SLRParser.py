@@ -18,24 +18,24 @@ class SLRParser:
                 table[index][n] = ["Error"]
         return(table)
 
-    def buildSLRTable(self, gotos, C, S, grammar, terminals, nonTerminals, grammarFollow):
+    def buildSLRTable(self, gotos, canonical, S, grammar, terminals, nonTerminals, grammarFollow):
         eofTerminals = terminals + ["EOF"]
-        table = self.initTable(len(C), eofTerminals, nonTerminals)
+        table = self.initTable(len(canonical), eofTerminals, nonTerminals)
 
-        # S' = S . rule
-        closureSet = closure(goto(C[0], S, grammar, nonTerminals), grammar, nonTerminals, set())
-        table["I_%d" % C.index(closureSet)]["EOF"] = ["Accepted"]
+        # RULE: S' = S .
+        closureSet = canonical[gotos[(0, S)]]
+        table["I_%d" % canonical.index(closureSet)]["EOF"] = ["Accepted"]
         if (['e'] in grammar[S]): table["I_0"]["EOF"] = ["Accepted"]
 
-        # goto(state, symbol) rule
+        # RULE: goto(state, symbol) [symbol = terminals U nonTerminals]
         for state, symbol in sorted(gotos):
             index = "I_%d" % state
             table[index][symbol] = [("e" if symbol in terminals else "") + str(gotos[(state, symbol)])]
 
-        # A = alpha . rule
-        for i in range(len(C)):
+        # RULE: A = alpha .
+        for i in range(len(canonical)):
             index = "I_%d" % i
-            for dot, production in C[i]:
+            for dot, production in canonical[i]:
                 n, production = production[0], production[2]
                 if (n == "S'"): continue
                 if (dot == len(production)):

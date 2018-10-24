@@ -9,7 +9,7 @@ class colors:
 
 class effect: # Doesn't seem to work .-.
     bold = "\033[1m"
-    end = "\033[21m"
+    end = "\033[0m"
 
 def printGrammar(grammar, terminals, nonTerminals = None):
     for n in (nonTerminals if nonTerminals is not None else grammar):
@@ -55,7 +55,7 @@ def printSLRTable(SLRTable, terminals, nonTerminals):
     print("\n"+colors.yellow+"SLR Table:"+colors.end)
     print(end=" "*8)
     lol = sorted(terminals)
-    lol.reverse()
+    # lol.reverse()
     column = lol + ["EOF"] + nonTerminals
     for c in column: print(("|%s%10s%s|" % (colors.yellow,c,colors.end)) if c == "EOF" else "|%10s|" % c, end='')
     print()
