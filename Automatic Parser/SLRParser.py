@@ -18,7 +18,7 @@ class SLRParser:
                 table[index][n] = ["Error"]
         return(table)
 
-    def buildSLRTable(self, statesList, C, S, grammar, terminals, nonTerminals, grammarFollow):
+    def buildSLRTable(self, gotos, C, S, grammar, terminals, nonTerminals, grammarFollow):
         eofTerminals = terminals + ["EOF"]
         table = self.initTable(len(C), eofTerminals, nonTerminals)
 
@@ -28,9 +28,9 @@ class SLRParser:
         if (['e'] in grammar[S]): table["I_0"]["EOF"] = ["Accepted"]
 
         # goto(state, symbol) rule
-        for state, symbol in sorted(statesList):
+        for state, symbol in sorted(gotos):
             index = "I_%d" % state
-            table[index][symbol] = [("e" if symbol in terminals else "") + str(statesList[(state, symbol)])]
+            table[index][symbol] = [("e" if symbol in terminals else "") + str(gotos[(state, symbol)])]
 
         # A = alpha . rule
         for i in range(len(C)):
