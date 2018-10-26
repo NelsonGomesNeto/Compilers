@@ -9,8 +9,8 @@ LEVEL = 0
 RAW = 0
 AUX = 1
 TABULAR = 0
-RECURSIVE = 0
-SLR = 1
+RECURSIVE = 1
+SLR = 0
 REVERSED = 1
 
 def buildLevel(S, tree):
