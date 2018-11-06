@@ -30,6 +30,7 @@ class SLRParser:
         # RULE: goto(state, symbol) [symbol = terminals U nonTerminals]
         for state, symbol in sorted(gotos):
             index = "I_%d" % state
+            if (table[index][symbol] != ["Error"]): print("Ambiguity on", index, symbol, "with", ("e" if symbol in terminals else "") + str(gotos[(state, symbol)]))
             table[index][symbol] = [("e" if symbol in terminals else "") + str(gotos[(state, symbol)])]
 
         # RULE: A = alpha .
@@ -40,6 +41,7 @@ class SLRParser:
                 if (n == "S'"): continue
                 if (dot == len(production)):
                     for f in grammarFollow[n]:
+                        if (table[index][f] != ["Error"]): print("Ambiguity on", index, f, "with", "r%d" % grammar[n].index([*production]), n)
                         table[index][f] = ["r%d" % grammar[n].index([*production]), n]
 
         return(table)
