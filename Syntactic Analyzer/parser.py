@@ -137,3 +137,5 @@ if (CODES):
             # preOrderGraph((0, 0, 0, S), nonTerminals, graph)
             print("Interesting-Print:")
             interestingPrint((0, 0, 0, S), nonTerminals, graph, 1)
+            print("AST:")
+            printAST((0, 0, 0, S), nonTerminals, graph, 0)

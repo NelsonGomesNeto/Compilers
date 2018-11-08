@@ -129,14 +129,22 @@ def resetString():
     global string
     string = ""
 
+def printAST(S, nonTerminals, graph, depth = 0):
+    if (S not in graph):
+        if (S[3][0] not in "()"): print((depth - len(str(S[3])) + 2)*" ", tokenBox(S, nonTerminals), sep='')
+        return
+    hasTerminal = 0
+    for u in graph[S]:
+        if (u[3] not in nonTerminals and u[3][0] not in "()"): hasTerminal = len(str(u[3])) - 2
+    for u in graph[S]:
+        printAST(u, nonTerminals, graph, depth + hasTerminal)
+
 global string
 def prepareInterestingPrint(S, nonTerminals, graph, notFirst):
     global string
     if (S not in graph):
-        # print(" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst else " ", tokenBox(S, nonTerminals), sep='')
         string += (" "*9 + ((S[0]-1)*16)*" " + "|" + 4*"-" + "> " if notFirst else " -> ") + tokenBox(S, nonTerminals) + "\n"
         return
-    # print(" "*4 + ((S[0]-1)*8)*" " + "|" + 1*"_" + "> " if notFirst and S[0] else (S[0]>0)*" ", tokenBox(S, nonTerminals), sep='', end='')
     string += (" "*9 + ((S[0]-1)*16)*" " + "|" + 4*"-" + "> " if notFirst and S[0] else (S[0]>0)*" -> ") + tokenBox(S, nonTerminals)
     for i, u in enumerate(graph[S]):
         prepareInterestingPrint(u, nonTerminals, graph, i)
