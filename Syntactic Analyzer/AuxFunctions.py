@@ -107,3 +107,15 @@ def buildCanonical(S, grammar, terminals, nonTerminals):
             printClosure(newState, nonTerminals)
         i += 1
     return(gotos, canonical)
+
+def buildAST(S, nonTerminals, graph):
+    AST = S[3] if S[3] not in nonTerminals and S[3][0] not in "()" else []
+    if (S not in graph):
+        return(AST)
+    hasTerminals = 0
+    for u in graph[S]:
+        if (u[3] not in nonTerminals and u[3][0] not in "()"): hasTerminals = 1
+    for u in graph[S]:
+        aux = buildAST(u, nonTerminals, graph)
+        if (aux): AST += [aux]
+    return(AST)

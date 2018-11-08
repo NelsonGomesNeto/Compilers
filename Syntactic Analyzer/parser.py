@@ -137,5 +137,7 @@ if (CODES):
             # preOrderGraph((0, 0, 0, S), nonTerminals, graph)
             print("Interesting-Print:")
             interestingPrint((0, 0, 0, S), nonTerminals, graph, 1)
+            AST = buildAST((0, 0, 0, S), nonTerminals, graph)
+            print("Raw AST:", AST)
             print("AST:")
-            printAST((0, 0, 0, S), nonTerminals, graph, 0)
+            printAST(AST)

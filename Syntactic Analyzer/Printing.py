@@ -129,15 +129,15 @@ def resetString():
     global string
     string = ""
 
-def printAST(S, nonTerminals, graph, depth = 0):
-    if (S not in graph):
-        if (S[3][0] not in "()"): print((depth - len(str(S[3])) + 2)*" ", tokenBox(S, nonTerminals), sep='')
+def printAST(AST, depth = 0):
+    if (type(AST) is tuple):
+        print(" "*(depth - len(str(AST)) + 2) + tokenBox([0, 0, 0, AST], []))
         return
-    hasTerminal = 0
-    for u in graph[S]:
-        if (u[3] not in nonTerminals and u[3][0] not in "()"): hasTerminal = len(str(u[3])) - 2
-    for u in graph[S]:
-        printAST(u, nonTerminals, graph, depth + hasTerminal)
+    spacing = 0
+    for u in AST:
+        if (type(u) is tuple): spacing = len(str(u)) - 2
+    for u in AST:
+        printAST(u, depth + spacing)
 
 global string
 def prepareInterestingPrint(S, nonTerminals, graph, notFirst):
