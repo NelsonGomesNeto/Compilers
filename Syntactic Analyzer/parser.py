@@ -139,5 +139,8 @@ if (CODES):
             interestingPrint((0, 0, 0, S), nonTerminals, graph, 1)
             AST = buildAST((0, 0, 0, S), nonTerminals, graph)
             print("Raw AST:", AST)
-            print("AST:")
+            newAST = {}
+            listToTree(AST, newAST)
+            print("Dict AST:", newAST)
             printAST(AST)
+            newPrintAST(newAST)

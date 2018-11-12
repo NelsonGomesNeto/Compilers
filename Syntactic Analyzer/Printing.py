@@ -135,9 +135,18 @@ def printAST(AST, depth = 0):
         return
     spacing = 0
     for u in AST:
-        if (type(u) is tuple): spacing = len(str(u)) - 2
+        if (type(u) is tuple):
+            spacing = len(str(u)) - 2
     for u in AST:
         printAST(u, depth + spacing)
+
+def newPrintAST(newAST, depth = 0):
+    if (type(newAST) is not dict):
+        print(" "*depth + str(newAST))
+        return
+    for u in newAST:
+        if (type(u) is not int): print(" "*(depth) + str(u))
+        newPrintAST(newAST[u], depth + 1)
 
 global string
 def prepareInterestingPrint(S, nonTerminals, graph, notFirst):

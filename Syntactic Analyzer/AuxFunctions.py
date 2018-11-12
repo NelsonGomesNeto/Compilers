@@ -1,4 +1,5 @@
 from Printing import *
+OPERATORS = "^+-/*"
 
 def classify(token, tokenMap):
     if (token in tokenMap):
@@ -119,3 +120,22 @@ def buildAST(S, nonTerminals, graph):
         aux = buildAST(u, nonTerminals, graph)
         if (aux): AST += [aux]
     return(AST)
+
+def listToTree(AST, newAST):
+    if (type(AST) is tuple): return(None)
+    operator = None
+    for u in AST:
+        if (type(u) is tuple):
+            if (u[0] in OPERATORS):
+                operator = u[0]
+                newAST[operator] = {}
+            else:
+                newAST[u[0]] = u[1]
+                return
+    operand = 0
+    for u in AST:
+        newNew = {}
+        listToTree(u, newNew if operator is not None else newAST)
+        if (operator != u and operator is not None and newNew):
+            newAST[operator][operand] = newNew
+            operand += 1
