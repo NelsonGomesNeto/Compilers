@@ -142,10 +142,10 @@ def printAST(AST, depth = 0):
 
 def newPrintAST(newAST, depth = 0):
     if (type(newAST) is not dict):
-        print(" "*depth + str(newAST))
+        print("   "*depth + str(newAST))
         return
     for u in newAST:
-        if (type(u) is not int): print(" "*(depth) + str(u))
+        if (type(u) is not int): print("   "*(depth) + str(u))
         newPrintAST(newAST[u], depth + 1)
 
 global string

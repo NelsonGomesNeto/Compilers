@@ -128,14 +128,14 @@ def listToTree(AST, newAST):
         if (type(u) is tuple):
             if (u[0] in OPERATORS):
                 operator = u[0]
-                newAST[operator] = {}
+                newAST["operator"] = operator
             else:
                 newAST[u[0]] = u[1]
                 return
-    operand = 0
+    operand = 1
     for u in AST:
         newNew = {}
         listToTree(u, newNew if operator is not None else newAST)
         if (operator != u and operator is not None and newNew):
-            newAST[operator][operand] = newNew
+            newAST["operand %d" % operand] = newNew
             operand += 1
